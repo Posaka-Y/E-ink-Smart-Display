@@ -19,19 +19,20 @@
 - **部分更新**: 非対応（フル更新のみ）
 - **推奨ライブラリ**: GxEPD2
 
-## ピン配置（未確定 — 要記入）
+## ピン配置（`firmware/src/config.h` で管理）
 
-| 機能 | ESP32-C3 GPIO |
-|---|---|
-| MOSI (DIN) | GP6 |
-| CLK | GP4 |
-| CS | GP7 |
-| DC | GP5 |
-| RST | GP3 |
-| BUSY | GP2 |
-| BME280 SDA | GP21 |
-| BME280 SCL | GP20 |
-| PIR OUT | GP1 |
+| 機能 | ESP32-C3 GPIO | 備考 |
+|---|---|---|
+| EPD DIN (MOSI) | GPIO7 | ソフトウェアSPI |
+| EPD CLK | GPIO6 | ソフトウェアSPI |
+| EPD CS | GPIO10 | |
+| EPD DC | GPIO5 | |
+| EPD RST | GPIO3 | |
+| EPD BUSY | GPIO2 | 起動時ストラップ、Hi-Z OK |
+| EPD PWR | GPIO8 | HIGH=電源ON、LOW=電源断（Deep Sleep時） |
+| I2C SDA | GPIO21 | AHT20 + BMP280 共有 |
+| I2C SCL | GPIO20 | AHT20 + BMP280 共有 |
+| PIR OUT | GPIO1 | RTC GPIO — Deep Sleep ext0 ウェイクアップ |
 
 ## ライブラリ構成
 

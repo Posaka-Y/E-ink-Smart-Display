@@ -24,12 +24,11 @@
 #include <WiFiUdp.h>
 #include <Adafruit_AHTX0.h>
 #include <Adafruit_BMP280.h>
+#include "config.h"
 #include "esp_wifi.h"
 #if WIFI_USE_ENTERPRISE
-  #include "esp_wpa2.h"
+  #include "esp_eap_client.h"
 #endif
-
-#include "config.h"
 #include "DEV_Config.h"
 #include "EPD_5in79b.h"
 #include "GUI_Paint.h"
@@ -60,20 +59,40 @@ static int      calCount = 0;
 
 static void wifi_connect()
 {
-    Serial.printf("[wifi] Connecting to %s ", WIFI_SSID);
     WiFi.disconnect(true);
     WiFi.mode(WIFI_STA);
 
+#ifdef WIFI_FIXED_MAC
+    {
+        uint8_t fixed_mac[] = WIFI_FIXED_MAC;
+        esp_err_t err = esp_wifi_set_mac(WIFI_IF_STA, fixed_mac);
+        Serial.printf("[wifi] Set fixed MAC: %02X:%02X:%02X:%02X:%02X:%02X (%s)\n",
+                      fixed_mac[0], fixed_mac[1], fixed_mac[2],
+                      fixed_mac[3], fixed_mac[4], fixed_mac[5],
+                      err == ESP_OK ? "OK" : esp_err_to_name(err));
+    }
+#endif
+
+    // 実際に使われているMACを確認
+    uint8_t mac[6];
+    esp_wifi_get_mac(WIFI_IF_STA, mac);
+    Serial.printf("[wifi] MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+                  mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+    Serial.printf("[wifi] Connecting to %s ", WIFI_SSID);
+
 #if WIFI_USE_ENTERPRISE
     // WPA2-Enterprise PEAP-MSCHAPv2 — 学校ネットワーク用
-    esp_wifi_sta_wpa2_ent_set_username(
-        (uint8_t*)EAP_USERNAME, strlen(EAP_USERNAME));
-    esp_wifi_sta_wpa2_ent_set_password(
-        (uint8_t*)EAP_PASSWORD, strlen(EAP_PASSWORD));
-    esp_wifi_sta_wpa2_ent_enable();
+    // inner username も @domain 付きが必要 (toyota-ti.ac.jp NPS の要件)
+    static const char eap_user[] = EAP_USERNAME "@" EAP_DOMAIN;
+    esp_eap_client_set_eap_methods(ESP_EAP_TYPE_PEAP);
+    esp_eap_client_set_disable_time_check(true);
+    esp_eap_client_use_default_cert_bundle(false);
+    esp_eap_client_set_identity((uint8_t*)EAP_IDENTITY, strlen(EAP_IDENTITY));
+    esp_eap_client_set_username((uint8_t*)eap_user, strlen(eap_user));
+    esp_eap_client_set_password((uint8_t*)EAP_PASSWORD, strlen(EAP_PASSWORD));
+    esp_wifi_sta_enterprise_enable();
     WiFi.begin(WIFI_SSID);
 #else
-    // 通常WPA2
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 #endif
 
@@ -86,13 +105,8 @@ static void wifi_connect()
     if (WiFi.status() == WL_CONNECTED) {
         Serial.printf("\n[wifi] Connected, IP: %s\n",
                       WiFi.localIP().toString().c_str());
-        // MACアドレス確認ログ
-        uint8_t mac[6];
-        esp_wifi_get_mac(WIFI_IF_STA, mac);
-        Serial.printf("[wifi] MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
-                      mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
     } else {
-        Serial.println("\n[wifi] Failed to connect");
+        Serial.printf("\n[wifi] Failed (status=%d)\n", WiFi.status());
     }
 }
 
@@ -256,7 +270,7 @@ void setup()
 
     // ── Deep sleep ────────────────────────────────────────────────────────────
     // Also enable PIR (GPIO4) as ext0 wake source
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)PIR_PIN, HIGH);
+    esp_deep_sleep_enable_gpio_wakeup(1ULL << PIR_PIN, ESP_GPIO_WAKEUP_GPIO_HIGH);
     esp_sleep_enable_timer_wakeup((uint64_t)SLEEP_SECONDS * 1000000ULL);
     esp_deep_sleep_start();
 }

@@ -60,7 +60,7 @@ int googlecal_fetch(const char* endpoint, CalEvent events[CAL_MAX_EVENTS])
     http.end();
 
     // Parse JSON array: [{title,time,allDay}, ...]
-    DynamicJsonDocument doc(2048);
+    JsonDocument doc;
     DeserializationError err = deserializeJson(doc, body);
     if (err) {
         Serial.printf("[gcal] JSON parse error: %s\n", err.c_str());

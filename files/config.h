@@ -16,12 +16,7 @@
 // ============================================================
 // SPI — e-ink display (Waveshare 5.79inch B)
 // ============================================================
-#define PIN_MOSI  6
-#define PIN_CLK   4
-#define PIN_CS    7
-#define PIN_DC    5
-#define PIN_RST   3
-#define PIN_BUSY  2
+
 
 // ============================================================
 // I2C — BME280

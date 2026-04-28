@@ -1,1 +1,1 @@
-# E-ink-Smart-Display
+# E-ink Smart Display 

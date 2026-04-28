@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>E-ink Layout Editor — 5.79" 792×272</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;background:#d0d0d0;display:flex;flex-direction:column;height:100vh;overflow:hidden;color:#222}
+
+#toolbar{background:#1e1e1e;color:#ddd;padding:7px 12px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;border-bottom:2px solid #444}
+#toolbar h1{font-size:12px;font-weight:600;color:#aaa;white-space:nowrap;margin-right:6px}
+.add-btn{background:#333;color:#ddd;border:1px solid #555;border-radius:4px;padding:4px 9px;cursor:pointer;font-size:11px;white-space:nowrap;transition:background .1s}
+.add-btn:hover{background:#484848}
+.add-btn.danger{background:#5c1010;border-color:#a03030}
+.add-btn.danger:hover{background:#7a1515}
+.sep{width:1px;height:18px;background:#444;margin:0 2px;flex-shrink:0}
+.toolbar-label{font-size:10px;color:#888;white-space:nowrap}
+
+#main{display:flex;flex:1;overflow:hidden}
+
+#canvas-area{flex:1;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:24px;background:#c8c8c8}
+#canvas-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+#canvas{width:792px;height:272px;background:#fff;position:relative;border:3px solid #333;overflow:hidden;user-select:none;cursor:default;box-shadow:6px 6px 0 rgba(0,0,0,.35)}
+#canvas-label{font-size:10px;color:#666;margin-top:6px;letter-spacing:.3px}
+
+.widget{position:absolute;cursor:move;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;min-width:8px;min-height:6px;border:1.5px dashed #6a9fd8}
+.widget.red-widget{border-color:#c84040}
+.widget.selected{border:2px solid #1a6fcc;z-index:100}
+.widget.selected.red-widget{border-color:#cc0000}
+.widget-type-label{font-size:9px;color:#888;pointer-events:none;position:absolute;top:1px;left:3px;line-height:1}
+.widget-preview{font-family:'Courier New',monospace;font-weight:700;pointer-events:none;white-space:nowrap;overflow:hidden;text-align:center;line-height:1.1}
+.widget-preview.black{color:#000}
+.widget-preview.red{color:#c80000}
+.divider-line{width:100%;height:100%;pointer-events:none}
+
+.handle{position:absolute;width:8px;height:8px;background:#1a6fcc;border:1.5px solid #fff;border-radius:1px;z-index:200;flex-shrink:0}
+.handle-nw{top:-4px;left:-4px;cursor:nw-resize}
+.handle-n{top:-4px;left:calc(50% - 4px);cursor:n-resize}
+.handle-ne{top:-4px;right:-4px;cursor:ne-resize}
+.handle-e{top:calc(50% - 4px);right:-4px;cursor:e-resize}
+.handle-se{bottom:-4px;right:-4px;cursor:se-resize}
+.handle-s{bottom:-4px;left:calc(50% - 4px);cursor:s-resize}
+.handle-sw{bottom:-4px;left:-4px;cursor:sw-resize}
+.handle-w{top:calc(50% - 4px);left:-4px;cursor:w-resize}
+
+#props{width:270px;background:#f4f4f4;border-left:1px solid #bbb;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+#props-header{padding:8px 12px;background:#e8e8e8;border-bottom:1px solid #ccc;font-weight:600;font-size:11px;color:#555;display:flex;justify-content:space-between;align-items:center}
+#props-body{flex:1;overflow-y:auto;padding:10px 12px}
+
+.section-title{font-size:9px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.7px;margin:12px 0 6px;padding-bottom:3px;border-bottom:1px solid #ddd}
+.section-title:first-child{margin-top:0}
+.prop-row{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.prop-lbl{font-size:11px;color:#666;width:48px;flex-shrink:0}
+.prop-row input[type=number],.prop-row input[type=text],.prop-row select{flex:1;border:1px solid #ccc;border-radius:3px;padding:2px 5px;font-size:11px;background:#fff;min-width:0}
+.prop-row input:focus,.prop-row select:focus{outline:none;border-color:#1a6fcc}
+.prop-row input:disabled{background:#f0f0f0;color:#aaa}
+
+.color-row{display:flex;gap:6px;margin-bottom:8px}
+.color-btn{flex:1;padding:5px 4px;border:2px solid #ddd;border-radius:4px;cursor:pointer;font-size:11px;font-weight:700;text-align:center;transition:border-color .1s,background .1s}
+.color-btn.active{border-width:2px}
+.color-btn.cb{color:#000}.color-btn.cb.active{border-color:#000;background:#eee}
+.color-btn.cr{color:#c00}.color-btn.cr.active{border-color:#c00;background:#fff0f0}
+
+.fmt-opts{display:flex;flex-direction:column;gap:3px}
+.fmt-opt{display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;padding:2px 0}
+.fmt-opt input{cursor:pointer}
+
+.wlist-item{display:flex;align-items:center;gap:5px;padding:4px 5px;border-radius:3px;cursor:pointer;font-size:11px;color:#444}
+.wlist-item:hover{background:#e8e8e8}
+.wlist-item.active{background:#daeaff;color:#1458a8}
+.wlist-dot{width:8px;height:8px;border-radius:1px;flex-shrink:0}
+.wlist-del{margin-left:auto;color:#bbb;cursor:pointer;font-size:15px;line-height:1;padding:0 2px;flex-shrink:0}
+.wlist-del:hover{color:#cc0000}
+.wlist-pos{color:#aaa;font-size:9px;flex-shrink:0}
+
+#export-area{border-top:1px solid #ccc;padding:10px 12px;background:#efefef;flex-shrink:0}
+.tab-row{display:flex;gap:3px;margin-bottom:7px}
+.etab{flex:1;padding:4px;border:1px solid #ccc;border-radius:3px;cursor:pointer;font-size:10px;font-weight:600;background:#fff;text-align:center;color:#666}
+.etab.active{background:#1e1e1e;color:#ddd;border-color:#1e1e1e}
+#export-out{width:100%;height:90px;font-family:'Courier New',monospace;font-size:9px;border:1px solid #bbb;border-radius:3px;padding:5px;resize:none;background:#1a1a1a;color:#c8c8c8;line-height:1.35}
+#copy-btn{width:100%;margin-top:5px;padding:5px;border:1px solid #bbb;border-radius:3px;cursor:pointer;font-size:11px;background:#fff;transition:background .1s}
+#copy-btn:hover{background:#e8e8e8}
+#copy-btn.done{color:green;border-color:green}
+
+#no-sel{color:#bbb;font-size:11px;text-align:center;padding:16px 0}
+
+.grid-svg{position:absolute;top:0;left:0;pointer-events:none;display:none}
+</style>
+</head>
+<body>
+
+<div id="toolbar">
+  <h1>E-ink Layout Editor</h1>
+  <span class="toolbar-label">792×272 / 黒・赤・白</span>
+  <div class="sep"></div>
+  <span class="toolbar-label">追加:</span>
+  <button class="add-btn" onclick="addWidget('clock')">時計</button>
+  <button class="add-btn" onclick="addWidget('date')">日付</button>
+  <button class="add-btn" onclick="addWidget('temperature')">気温</button>
+  <button class="add-btn" onclick="addWidget('humidity')">湿度</button>
+  <button class="add-btn" onclick="addWidget('pressure')">気圧</button>
+  <button class="add-btn" onclick="addWidget('weather')">天気</button>
+  <button class="add-btn" onclick="addWidget('divider_h')">─横線</button>
+  <button class="add-btn" onclick="addWidget('divider_v')">│縦線</button>
+  <button class="add-btn" onclick="addWidget('text')">テキスト</button>
+  <div class="sep"></div>
+  <button class="add-btn" id="grid-btn" onclick="toggleGrid()">グリッド OFF</button>
+  <button class="add-btn" onclick="saveLayout()">保存 (JSON)</button>
+  <button class="add-btn" onclick="document.getElementById('load-input').click()">読込</button>
+  <input type="file" id="load-input" accept=".json" style="display:none" onchange="loadLayout(event)">
+  <div class="sep"></div>
+  <span class="toolbar-label">プリセット:</span>
+  <button class="add-btn" onclick="loadPreset('clock_schedule')" style="background:#1a4a2e;border-color:#2d7a4a">時計+予定</button>
+  <div class="sep"></div>
+  <button class="add-btn danger" onclick="clearAll()">全消去</button>
+</div>
+
+<div id="main">
+  <div id="canvas-area">
+    <div id="canvas-wrap">
+      <div id="canvas" onmousedown="canvasMD(event)">
+        <svg class="grid-svg" id="grid-svg" width="792" height="272">
+          <defs>
+            <pattern id="sg" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M8 0L0 0 0 8" fill="none" stroke="#e0e0e0" stroke-width=".5"/>
+            </pattern>
+            <pattern id="lg" width="40" height="40" patternUnits="userSpaceOnUse">
+              <rect width="40" height="40" fill="url(#sg)"/>
+              <path d="M40 0L0 0 0 40" fill="none" stroke="#d0d0d0" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="792" height="272" fill="url(#lg)"/>
+        </svg>
+      </div>
+      <div id="canvas-label">Waveshare 5.79" e-Paper Module (B) — 792 × 272 px</div>
+    </div>
+  </div>
+
+  <div id="props">
+    <div id="props-header">
+      <span>プロパティ</span>
+      <span id="sel-label" style="font-size:10px;color:#999">未選択</span>
+    </div>
+    <div id="props-body">
+
+      <div class="section-title">ウィジェット一覧</div>
+      <div id="wlist"></div>
+
+      <div id="props-form" style="display:none">
+        <div class="section-title">位置 / サイズ</div>
+        <div class="prop-row">
+          <span class="prop-lbl">X</span>
+          <input type="number" id="p-x" min="0" max="791" onchange="ap('x',+this.value)">
+          <span class="prop-lbl" style="width:28px;text-align:right">Y</span>
+          <input type="number" id="p-y" min="0" max="271" onchange="ap('y',+this.value)">
+        </div>
+        <div class="prop-row" id="wh-row">
+          <span class="prop-lbl">W</span>
+          <input type="number" id="p-w" min="4" max="792" onchange="ap('w',+this.value)">
+          <span class="prop-lbl" style="width:28px;text-align:right">H</span>
+          <input type="number" id="p-h" min="4" max="272" onchange="ap('h',+this.value)">
+        </div>
+
+        <div id="font-section">
+          <div class="section-title">フォント</div>
+          <div class="prop-row">
+            <span class="prop-lbl">サイズ</span>
+            <select id="p-font" onchange="ap('font',this.value)">
+              <option value="Font8">Font8  (5×8 px)</option>
+              <option value="Font12">Font12 (7×12 px)</option>
+              <option value="Font16">Font16 (11×16 px)</option>
+              <option value="Font20">Font20 (14×20 px)</option>
+              <option value="Font24">Font24 (17×24 px)</option>
+              <option value="Font36">Font36 (24×36 px) ※要追加</option>
+              <option value="Font48">Font48 (32×48 px) ※要追加</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section-title">カラー</div>
+        <div class="color-row">
+          <div class="color-btn cb" id="cbk" onclick="ap('color','black')">● 黒</div>
+          <div class="color-btn cr" id="crd" onclick="ap('color','red')">● 赤</div>
+        </div>
+
+        <div id="fmt-section">
+          <div class="section-title">フォーマット</div>
+          <div class="fmt-opts" id="fmt-opts"></div>
+        </div>
+
+        <div id="text-section" style="display:none">
+          <div class="section-title">テキスト</div>
+          <div class="prop-row">
+            <input type="text" id="p-text" placeholder="表示するテキスト" oninput="ap('text',this.value)" style="flex:1">
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <button class="add-btn danger" style="width:100%;justify-content:center" onclick="delSelected()">このウィジェットを削除</button>
+        </div>
+      </div>
+
+      <div id="no-sel">ウィジェットを選択<br>またはツールバーから追加</div>
+    </div>
+
+    <div id="export-area">
+      <div class="tab-row">
+        <div class="etab active" onclick="setTab('json')">JSON 設定</div>
+        <div class="etab" onclick="setTab('c')">C コード</div>
+      </div>
+      <textarea id="export-out" readonly></textarea>
+      <button id="copy-btn" onclick="copyOut()">クリップボードにコピー</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFS = {
+  clock:       {label:'時計',      w:220,h:55, font:'Font24', fmt:'HH:MM'},
+  date:        {label:'日付',      w:200,h:38, font:'Font20', fmt:'YYYY/MM/DD'},
+  temperature: {label:'気温',      w:150,h:40, font:'Font20', fmt:'XX.X°C'},
+  humidity:    {label:'湿度',      w:130,h:36, font:'Font16', fmt:'XX%'},
+  pressure:    {label:'気圧',      w:160,h:36, font:'Font16', fmt:'XXXX hPa'},
+  weather:     {label:'天気',      w:140,h:50, font:'Font16', fmt:'icon+text'},
+  divider_h:   {label:'横線',      w:792,h:3,  font:'Font8',  fmt:'-'},
+  divider_v:   {label:'縦線',      w:3,  h:272,font:'Font8',  fmt:'-'},
+  text:        {label:'テキスト',  w:200,h:32, font:'Font16', fmt:'-'},
+};
+const FMTS = {
+  clock:['HH:MM'],
+  date:['YYYY/MM/DD','MM/DD(曜)','YYYY年MM月DD日'],
+  temperature:['XX.X°C','XX°C','XX.X°F'],
+  humidity:['XX%','XX.X%'],
+  pressure:['XXXX hPa','XXXX'],
+  weather:['icon+text','text only'],
+};
+const FS = {Font8:8,Font12:12,Font16:16,Font20:20,Font24:24,Font36:36,Font48:48};
+
+let widgets=[], sel=null, uid=0, tabMode='json', gridOn=false;
+let drag=null, rsz=null;
+
+const C = document.getElementById('canvas');
+const cr = ()=>C.getBoundingClientRect();
+
+function now(){
+  const d=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return {h:pad(d.getHours()),m:pad(d.getMinutes()),s:pad(d.getSeconds()),
+    y:d.getFullYear(),mo:pad(d.getMonth()+1),dy:pad(d.getDate()),
+    wd:['日','月','火','水','木','金','土'][d.getDay()]};
+}
+
+function previewText(w){
+  const n=now();
+  const t=w.type, f=w.fmt||'';
+  if(t==='clock') return f==='HH:MM:SS'?`${n.h}:${n.m}:${n.s}`:`${n.h}:${n.m}`;
+  if(t==='date'){
+    if(f==='MM/DD(曜)') return `${n.mo}/${n.dy}(${n.wd})`;
+    if(f.includes('年')) return `${n.y}年${n.mo}月${n.dy}日`;
+    return `${n.y}/${n.mo}/${n.dy}`;
+  }
+  if(t==='temperature') return f.includes('.X')?'24.5°C':'25°C';
+  if(t==='humidity') return f.includes('.X')?'65.2%':'65%';
+  if(t==='pressure') return '1013 hPa';
+  if(t==='weather') return f==='icon+text'?'Sunny 24°C':'24°C';
+  if(t==='text') return w.text||'テキスト';
+  return '';
+}
+
+function addWidget(type){
+  const d=DEFS[type];
+  const id='w'+(++uid);
+  const w={id,type,x:Math.round((792-d.w)/2),y:Math.round((272-d.h)/2),
+    w:d.w,h:d.h,font:d.font,color:'black',fmt:d.fmt,text:'テキスト'};
+  widgets.push(w);
+  renderW(w);
+  selectW(id);
+  updateWList();
+  updateExport();
+}
+
+function renderW(w){
+  let el=document.getElementById(w.id);
+  const isNew=!el;
+  if(isNew){
+    el=document.createElement('div');
+    el.id=w.id;
+    el.addEventListener('mousedown',e=>widgetMD(e,w.id));
+    C.appendChild(el);
+  }
+  el.style.cssText=`left:${w.x}px;top:${w.y}px;width:${w.w}px;height:${w.h}px`;
+  const isSel=w.id===sel;
+  el.className='widget'+(isSel?' selected':'')+(w.color==='red'?' red-widget':'');
+
+  const isDH=w.type==='divider_h', isDV=w.type==='divider_v';
+  if(isDH||isDV){
+    el.style.background=w.color==='red'?'rgba(180,0,0,.7)':'rgba(0,0,0,.75)';
+    el.style.border='none';
+    el.innerHTML='';
+    if(isSel) addHandles(el,w);
+    return;
+  }
+  el.style.background='';
+
+  const fs=Math.min(FS[w.font]||16, w.h*0.8, w.w*0.25);
+  const pt=previewText(w);
+  el.innerHTML=`<div class="widget-type-label">${DEFS[w.type].label}</div>`+
+    `<div class="widget-preview ${w.color}" style="font-size:${fs}px">${pt}</div>`;
+  if(isSel) addHandles(el,w);
+}
+
+function addHandles(el,w){
+  ['nw','n','ne','e','se','s','sw','w'].forEach(d=>{
+    const h=document.createElement('div');
+    h.className=`handle handle-${d}`;
+    h.dataset.dir=d;
+    h.addEventListener('mousedown',e=>{e.stopPropagation();startRsz(e,w.id,d);});
+    el.appendChild(h);
+  });
+}
+
+function rerenderAll(){widgets.forEach(renderW);}
+
+function selectW(id){
+  sel=id;
+  rerenderAll();
+  updateProps();
+  updateWList();
+  document.getElementById('sel-label').textContent=id?`選択: ${DEFS[widgets.find(w=>w.id===id)?.type]?.label||''}`:'未選択';
+}
+
+function widgetMD(e,id){
+  if(e.target.classList.contains('handle')) return;
+  e.stopPropagation();
+  selectW(id);
+  const w=widgets.find(x=>x.id===id);
+  const r=cr();
+  drag={id,sx:w.x,sy:w.y,mx:e.clientX-r.left,my:e.clientY-r.top};
+  e.preventDefault();
+}
+
+function startRsz(e,id,dir){
+  e.preventDefault();
+  const w=widgets.find(x=>x.id===id);
+  const r=cr();
+  rsz={id,dir,ox:w.x,oy:w.y,ow:w.w,oh:w.h,mx:e.clientX-r.left,my:e.clientY-r.top};
+}
+
+function canvasMD(e){
+  if(e.target===C||e.target.tagName==='svg'||e.target.tagName==='rect'||e.target.tagName==='path'||e.target.tagName==='defs'){
+    selectW(null);
+  }
+}
+
+document.addEventListener('mousemove',e=>{
+  if(!drag&&!rsz) return;
+  const r=cr();
+  const mx=e.clientX-r.left, my=e.clientY-r.top;
+  if(drag){
+    const w=widgets.find(x=>x.id===drag.id);
+    w.x=Math.max(0,Math.min(792-w.w,drag.sx+mx-drag.mx));
+    w.y=Math.max(0,Math.min(272-w.h,drag.sy+my-drag.my));
+    renderW(w); syncFields(); updateExport();
+  }
+  if(rsz){
+    const w=widgets.find(x=>x.id===rsz.id);
+    const dx=mx-rsz.mx, dy=my-rsz.my, d=rsz.dir;
+    let nx=rsz.ox,ny=rsz.oy,nw=rsz.ow,nh=rsz.oh;
+    if(d.includes('e')) nw=Math.max(8,rsz.ow+dx);
+    if(d.includes('s')) nh=Math.max(4,rsz.oh+dy);
+    if(d.includes('w')){nw=Math.max(8,rsz.ow-dx);nx=rsz.ox+(rsz.ow-nw);}
+    if(d.includes('n')){nh=Math.max(4,rsz.oh-dy);ny=rsz.oy+(rsz.oh-nh);}
+    w.x=Math.round(Math.max(0,Math.min(784,nx)));
+    w.y=Math.round(Math.max(0,Math.min(268,ny)));
+    w.w=Math.round(Math.min(792-w.x,nw));
+    w.h=Math.round(Math.min(272-w.y,nh));
+    renderW(w); syncFields(); updateExport();
+  }
+});
+
+document.addEventListener('mouseup',()=>{drag=null;rsz=null;});
+
+document.addEventListener('keydown',e=>{
+  if(!sel) return;
+  if(document.activeElement.tagName==='INPUT'||document.activeElement.tagName==='TEXTAREA') return;
+  if(e.key==='Delete'||e.key==='Backspace') delSelected();
+  const w=widgets.find(x=>x.id===sel); if(!w) return;
+  const step=e.shiftKey?10:1;
+  if(e.key==='ArrowLeft'){w.x=Math.max(0,w.x-step);e.preventDefault();}
+  if(e.key==='ArrowRight'){w.x=Math.min(792-w.w,w.x+step);e.preventDefault();}
+  if(e.key==='ArrowUp'){w.y=Math.max(0,w.y-step);e.preventDefault();}
+  if(e.key==='ArrowDown'){w.y=Math.min(272-w.h,w.y+step);e.preventDefault();}
+  renderW(w); syncFields(); updateExport();
+});
+
+function delSelected(){
+  if(!sel) return;
+  const el=document.getElementById(sel); if(el) el.remove();
+  widgets=widgets.filter(w=>w.id!==sel);
+  sel=null; updateProps(); updateWList(); updateExport();
+  document.getElementById('sel-label').textContent='未選択';
+}
+
+function clearAll(){
+  if(widgets.length&&!confirm('全てのウィジェットを削除しますか？')) return;
+  widgets.forEach(w=>{const e=document.getElementById(w.id);if(e) e.remove();});
+  widgets=[]; sel=null; updateProps(); updateWList(); updateExport();
+}
+
+function ap(key,val){
+  if(!sel) return;
+  const w=widgets.find(x=>x.id===sel); if(!w) return;
+  w[key]=val; renderW(w); syncFields(); updateExport();
+}
+
+function updateProps(){
+  const form=document.getElementById('props-form');
+  const nosel=document.getElementById('no-sel');
+  if(!sel){form.style.display='none';nosel.style.display='';return;}
+  form.style.display=''; nosel.style.display='none';
+  syncFields(); buildFmtOpts();
+}
+
+function syncFields(){
+  if(!sel) return;
+  const w=widgets.find(x=>x.id===sel); if(!w) return;
+  document.getElementById('p-x').value=w.x;
+  document.getElementById('p-y').value=w.y;
+  document.getElementById('p-w').value=w.w;
+  document.getElementById('p-h').value=w.h;
+  document.getElementById('p-font').value=w.font;
+  document.getElementById('cbk').className='color-btn cb'+(w.color==='black'?' active':'');
+  document.getElementById('crd').className='color-btn cr'+(w.color==='red'?' active':'');
+  const isDH=w.type==='divider_h', isDV=w.type==='divider_v';
+  document.getElementById('font-section').style.display=(isDH||isDV)?'none':'';
+  document.getElementById('fmt-section').style.display=(isDH||isDV||w.type==='text')?'none':'';
+  document.getElementById('text-section').style.display=w.type==='text'?'':'none';
+  if(w.type==='text') document.getElementById('p-text').value=w.text||'';
+  document.getElementById('p-w').disabled=isDH;
+  document.getElementById('p-h').disabled=isDV;
+}
+
+function buildFmtOpts(){
+  if(!sel) return;
+  const w=widgets.find(x=>x.id===sel); if(!w) return;
+  const fmts=FMTS[w.type]||[];
+  const c=document.getElementById('fmt-opts');
+  c.innerHTML=fmts.map(f=>`
+    <label class="fmt-opt">
+      <input type="radio" name="fmt" value="${f}" ${w.fmt===f?'checked':''} onchange="ap('fmt',this.value)">
+      <span>${f}</span>
+    </label>`).join('');
+}
+
+function updateWList(){
+  const el=document.getElementById('wlist');
+  if(!widgets.length){el.innerHTML='<div style="color:#bbb;font-size:11px;padding:3px 0">ウィジェットなし</div>';return;}
+  el.innerHTML=widgets.map(w=>`
+    <div class="wlist-item ${w.id===sel?'active':''}" onclick="selectW('${w.id}')">
+      <div class="wlist-dot" style="background:${w.color==='red'?'#c00':'#222'}"></div>
+      <span>${DEFS[w.type].label}</span>
+      <span class="wlist-pos">(${w.x},${w.y})</span>
+      <span class="wlist-del" onclick="event.stopPropagation();delById('${w.id}')">×</span>
+    </div>`).join('');
+}
+
+function delById(id){
+  const el=document.getElementById(id);if(el) el.remove();
+  widgets=widgets.filter(w=>w.id!==id);
+  if(sel===id){sel=null;updateProps();}
+  updateWList(); updateExport();
+}
+
+function toggleGrid(){
+  gridOn=!gridOn;
+  document.getElementById('grid-svg').style.display=gridOn?'block':'none';
+  document.getElementById('grid-btn').textContent='グリッド '+(gridOn?'ON':'OFF');
+}
+
+function setTab(m){
+  tabMode=m;
+  document.querySelectorAll('.etab').forEach((t,i)=>{
+    t.className='etab'+((i===0&&m==='json')||(i===1&&m==='c')?' active':'');
+  });
+  updateExport();
+}
+
+function updateExport(){
+  const out=document.getElementById('export-out');
+  if(tabMode==='json'){
+    out.value=JSON.stringify({
+      version:1,
+      display:{width:792,height:272,colors:['black','white','red']},
+      widgets:widgets.map(w=>({
+        id:w.id,type:w.type,x:w.x,y:w.y,
+        ...(w.type!=='divider_h'&&w.type!=='divider_v'?{w:w.w,h:w.h,font:w.font,fmt:w.fmt}:{}),
+        color:w.color,
+        ...(w.type==='text'?{text:w.text}:{})
+      }))
+    },null,2);
+  } else {
+    const L=[];
+    L.push('// E-ink Layout — ESP32-C3 Supermini + Waveshare 5.79"(B)');
+    L.push('// Auto-generated by Layout Editor');
+    L.push('');
+    L.push('void drawLayout(UBYTE *BlackImg, UBYTE *RedImg) {');
+    L.push('    Paint_NewImage(BlackImg, 792, 272, 0, WHITE);');
+    L.push('    Paint_NewImage(RedImg,   792, 272, 0, WHITE);');
+    L.push('');
+    widgets.forEach(w=>{
+      const r=w.color==='red', img=r?'RedImg':'BlackImg', col=r?'RED':'BLACK';
+      L.push(`    // --- ${DEFS[w.type].label} ---`);
+      L.push(`    Paint_SelectImage(${img});`);
+      if(w.type==='divider_h'){
+        L.push(`    Paint_DrawLine(0, ${w.y}, 792, ${w.y}, ${col}, DOT_PIXEL_1X1, LINE_STYLE_SOLID);`);
+      } else if(w.type==='divider_v'){
+        L.push(`    Paint_DrawLine(${w.x}, 0, ${w.x}, 272, ${col}, DOT_PIXEL_1X1, LINE_STYLE_SOLID);`);
+      } else if(w.type==='clock'){
+        L.push(`    // fmt: "${w.fmt}" — time_str は NTPから生成`);
+        L.push(`    strftime(time_str, sizeof(time_str), "${w.fmt==='HH:MM:SS'?'%H:%M:%S':'%H:%M'}", &timeinfo);`);
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, time_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='date'){
+        const dfmt=w.fmt==='MM/DD(曜)'?'%m/%d(%a)':w.fmt.includes('年')?'%Y年%m月%d日':'%Y/%m/%d';
+        L.push(`    strftime(date_str, sizeof(date_str), "${dfmt}", &timeinfo);`);
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, date_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='temperature'){
+        const cfmt=w.fmt.includes('.X')?'"%.1f\\xB0C"':'"%.0f\\xB0C"';
+        L.push(`    snprintf(temp_str, sizeof(temp_str), ${cfmt}, temperature);`);
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, temp_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='humidity'){
+        const hfmt=w.fmt.includes('.X')?'"%.1f%%"':'"%.0f%%"';
+        L.push(`    snprintf(humi_str, sizeof(humi_str), ${hfmt}, humidity);`);
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, humi_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='pressure'){
+        L.push(`    snprintf(pres_str, sizeof(pres_str), "%.0f hPa", pressure);`);
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, pres_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='weather'){
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, weather_str, &${w.font}, ${col}, WHITE);`);
+      } else if(w.type==='text'){
+        L.push(`    Paint_DrawString_EN(${w.x}, ${w.y}, "${(w.text||'').replace(/"/g,'\\"')}", &${w.font}, ${col}, WHITE);`);
+      }
+      L.push('');
+    });
+    L.push('    EPD_5in79b_Display(BlackImg, RedImg);');
+    L.push('}');
+    out.value=L.join('\n');
+  }
+}
+
+function copyOut(){
+  navigator.clipboard.writeText(document.getElementById('export-out').value).then(()=>{
+    const b=document.getElementById('copy-btn');
+    b.textContent='コピー完了!'; b.className='done';
+    setTimeout(()=>{b.textContent='クリップボードにコピー';b.className='';},1800);
+  });
+}
+
+function saveLayout(){
+  const json=JSON.stringify({version:1,display:{width:792,height:272},widgets:widgets},null,2);
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(json);
+  a.download='eink_layout.json'; a.click();
+}
+
+function loadLayout(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      clearAll();
+      (d.widgets||[]).forEach(w=>{
+        uid++;
+        const nw={...w, id:'w'+uid, text:w.text||'テキスト', fmt:w.fmt||DEFS[w.type]?.fmt||'-'};
+        if(!nw.w) nw.w=DEFS[w.type]?.w||100;
+        if(!nw.h) nw.h=DEFS[w.type]?.h||30;
+        widgets.push(nw);
+        renderW(nw);
+      });
+      updateWList(); updateExport();
+    }catch(err){alert('JSONの読み込みに失敗しました: '+err.message);}
+  };
+  r.readAsText(f);
+  e.target.value='';
+}
+
+updateWList();
+updateExport();
+
+setInterval(()=>{
+  widgets.filter(w=>w.type==='clock').forEach(renderW);
+},1000);
+
+const PRESETS = {
+  clock_schedule: {
+    version:1,
+    display:{width:792,height:272},
+    widgets:[
+      {id:'p1',  type:'date',        x:10,  y:6,   w:220, h:22,  font:'Font16', fmt:'MM/DD(曜)',  color:'black'},
+      {id:'p2',  type:'clock',       x:8,   y:32,  w:370, h:95,  font:'Font24', fmt:'HH:MM',     color:'black'},
+      {id:'p3',  type:'temperature', x:8,   y:140, w:170, h:38,  font:'Font24', fmt:'XX.X°C',    color:'black'},
+      {id:'p4',  type:'text',        x:190, y:145, w:42,  h:16,  font:'Font12', fmt:'-', color:'black', text:'湿度'},
+      {id:'p5',  type:'humidity',    x:236, y:140, w:120, h:22,  font:'Font16', fmt:'XX%',        color:'black'},
+      {id:'p6',  type:'text',        x:190, y:168, w:42,  h:16,  font:'Font12', fmt:'-', color:'black', text:'気圧'},
+      {id:'p7',  type:'pressure',    x:236, y:163, w:148, h:22,  font:'Font16', fmt:'XXXX hPa',   color:'black'},
+      {id:'p8',  type:'text',        x:10,  y:250, w:130, h:16,  font:'Font12', fmt:'-', color:'black', text:'更新 14:30'},
+      {id:'p9',  type:'text',        x:148, y:250, w:210, h:16,  font:'Font12', fmt:'-', color:'red',   text:'↓気圧 低下中'},
+      {id:'p10', type:'divider_v',   x:394, y:0,   w:3,   h:272, color:'black'},
+      {id:'p11', type:'text',        x:406, y:6,   w:200, h:20,  font:'Font16', fmt:'-', color:'black', text:'今日の予定'},
+      {id:'p12', type:'divider_h',   x:406, y:30,  w:383, h:2,   color:'black'},
+      {id:'p13', type:'text',        x:406, y:38,  w:88,  h:32,  font:'Font24', fmt:'-', color:'black', text:'15:30'},
+      {id:'p14', type:'text',        x:500, y:38,  w:286, h:22,  font:'Font16', fmt:'-', color:'red',   text:'1on1 田中さん'},
+      {id:'p15', type:'text',        x:500, y:62,  w:200, h:16,  font:'Font12', fmt:'-', color:'black', text:'@ 会議室A'},
+      {id:'p16', type:'divider_h',   x:406, y:88,  w:383, h:1,   color:'black'},
+      {id:'p17', type:'text',        x:406, y:96,  w:88,  h:28,  font:'Font20', fmt:'-', color:'black', text:'17:00'},
+      {id:'p18', type:'text',        x:500, y:96,  w:280, h:22,  font:'Font16', fmt:'-', color:'black', text:'設計レビュー'},
+      {id:'p19', type:'text',        x:500, y:120, w:100, h:16,  font:'Font12', fmt:'-', color:'black', text:'Meet'},
+      {id:'p20', type:'divider_h',   x:406, y:148, w:383, h:1,   color:'black'},
+      {id:'p21', type:'text',        x:406, y:156, w:88,  h:28,  font:'Font20', fmt:'-', color:'black', text:'19:00'},
+      {id:'p22', type:'text',        x:500, y:156, w:200, h:22,  font:'Font16', fmt:'-', color:'black', text:'ジム'},
+    ]
+  }
+};
+
+function loadPreset(name){
+  const d=PRESETS[name];
+  if(!d) return;
+  if(widgets.length&&!confirm('現在のレイアウトを破棄してプリセットを読み込みますか？')) return;
+  clearAll();
+  d.widgets.forEach(w=>{
+    const nw={...w, text:w.text||'テキスト', fmt:w.fmt||DEFS[w.type]?.fmt||'-'};
+    if(!nw.w) nw.w=DEFS[w.type]?.w||100;
+    if(!nw.h) nw.h=DEFS[w.type]?.h||30;
+    widgets.push(nw);
+    renderW(nw);
+  });
+  uid=100;
+  updateWList(); updateExport();
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# PlatformIO ビルドキャッシュ・依存ライブラリ
+.pio/
+firmware/.pio/
+
+# 認証情報・シークレット（絶対にコミットしない）
+firmware/src/config.h
+src/config.h
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db

@@ -9,10 +9,10 @@
 
 // A single calendar event
 struct CalEvent {
-    char title[64];   // Event title (truncated to fit display)
-    char time[12];    // "HH:MM" or "終日" (all-day)
-    bool allDay;
-    bool valid;       // false = slot unused
+    char title[64] = {};
+    char time[12]  = {};
+    bool allDay    = false;
+    bool valid     = false;
 };
 
 // Fetch today's events from Google Apps Script JSON proxy.

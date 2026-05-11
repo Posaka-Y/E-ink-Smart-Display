@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-ink Smart Display — ESP32 仕様書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #f2f0eb;
+  font-family: 'Noto Sans JP', sans-serif;
+  color: #111;
+  min-height: 100vh;
+}
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+.header h1 {
+  font-family: 'Space Mono', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: #111;
+  color: #fff;
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+}
+.badge.red { background: #D32F2F; }
+.subhead {
+  font-size: 12px;
+  color: #888;
+  font-family: 'Space Mono', monospace;
+  margin-bottom: 32px;
+}
+
+/* ── Display preview ── */
+.display-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.display-label {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: #aaa;
+  margin-top: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 36px;
+}
+.section-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888;
+  border-bottom: 1.5px solid #ccc;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+}
+
+/* ── Architecture ── */
+.arch {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #fff;
+  border: 1.5px solid #ddd;
+  padding: 20px 24px;
+  overflow-x: auto;
+}
+.arch-node {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.arch-box {
+  border: 1.5px solid #111;
+  padding: 8px 14px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+  min-width: 90px;
+  background: #fff;
+}
+.arch-box.dark { background: #111; color: #fff; }
+.arch-box.red { background: #D32F2F; color: #fff; border-color: #D32F2F; }
+.arch-box.gray { background: #f5f5f5; color: #555; border-color: #bbb; }
+.arch-label {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  line-height: 1.3;
+}
+.arch-arrow {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 8px;
+  gap: 2px;
+}
+.arch-arrow-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.arch-arrow-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #aaa;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+/* ── JSON schema ── */
+.json-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.json-block {
+  background: #1e1e1e;
+  border: 1.5px solid #333;
+  padding: 16px 18px;
+  position: relative;
+}
+.json-block-label {
+  position: absolute;
+  top: -1px;
+  left: 12px;
+  background: #D32F2F;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+}
+.json-block pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #d4d4d4;
+  white-space: pre;
+  overflow-x: auto;
+  margin-top: 10px;
+}
+.json-block pre .k { color: #9cdcfe; }   /* key */
+.json-block pre .s { color: #ce9178; }   /* string */
+.json-block pre .n { color: #b5cea8; }   /* number */
+.json-block pre .c { color: #6a9955; }   /* comment */
+.json-block pre .p { color: #569cd6; }   /* punctuation */
+
+/* ── Field table ── */
+.field-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.field-table th {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: left;
+  padding: 6px 12px;
+  background: #111;
+  color: #fff;
+}
+.field-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e8e8e8;
+  vertical-align: top;
+}
+.field-table tr:last-child td { border-bottom: none; }
+.field-table tr:nth-child(even) td { background: #fafafa; }
+.field-table code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: #eee;
+  padding: 1px 5px;
+  color: #D32F2F;
+}
+.field-table td:first-child { white-space: nowrap; }
+
+/* ── Code block ── */
+.code-block {
+  background: #1e1e1e;
+  border: 1.5px solid #333;
+  padding: 0;
+  position: relative;
+  margin-bottom: 16px;
+}
+.code-block-header {
+  background: #2d2d2d;
+  padding: 7px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3a3a3a;
+}
+.code-block-title {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #aaa;
+  letter-spacing: 0.08em;
+}
+.code-block-lang {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: #555;
+}
+.code-block pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #d4d4d4;
+  padding: 16px 18px;
+  white-space: pre;
+  overflow-x: auto;
+}
+.code-block pre .kw  { color: #569cd6; }
+.code-block pre .fn  { color: #dcdcaa; }
+.code-block pre .str { color: #ce9178; }
+.code-block pre .num { color: #b5cea8; }
+.code-block pre .cm  { color: #6a9955; }
+.code-block pre .tp  { color: #4ec9b0; }
+
+.tip {
+  background: #fff8e1;
+  border-left: 3px solid #f9a825;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #555;
+  margin-top: 12px;
+  font-family: 'Noto Sans JP', sans-serif;
+  line-height: 1.6;
+}
+.tip strong { color: #111; }
+
+.size-pill {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  background: #111;
+  color: #fff;
+  padding: 2px 8px;
+  margin-left: 8px;
+}
+.size-pill.green { background: #2e7d32; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <h1>E-ink Smart Display</h1>
+    <span class="badge">LAYOUT A</span>
+    <span class="badge red">ESP32</span>
+  </div>
+  <div class="subhead">Waveshare 5.79" · 792×272 · 3-color (B/W/R) · BME280 + Google Calendar</div>
+
+  <!-- Display preview -->
+  <div id="preview-root"></div>
+  <div class="display-label">↑ 実寸プレビュー (792×272 px)</div>
+
+  <!-- Architecture -->
+  <div class="section" style="margin-top:32px;">
+    <div class="section-title">データフロー</div>
+    <div class="arch">
+      <div class="arch-node">
+        <div class="arch-box gray">BME280</div>
+        <div class="arch-label">I²C<br>直結</div>
+      </div>
+      <div class="arch-arrow">
+        <div class="arch-arrow-line">
+          <svg width="28" height="12" viewBox="0 0 28 12"><line x1="0" y1="6" x2="22" y2="6" stroke="#999" stroke-width="1.5"/><polygon points="22,2 28,6 22,10" fill="#999"/></svg>
+        </div>
+        <div class="arch-arrow-label">temp/hum/pres</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-box dark">ESP32</div>
+        <div class="arch-label">NTP で時刻同期<br>5分ごと更新</div>
+      </div>
+      <div class="arch-arrow">
+        <div class="arch-arrow-line">
+          <svg width="28" height="12" viewBox="0 0 28 12"><line x1="0" y1="6" x2="22" y2="6" stroke="#999" stroke-width="1.5"/><polygon points="22,2 28,6 22,10" fill="#999"/></svg>
+        </div>
+        <div class="arch-arrow-label">HTTP GET</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-box" style="font-size:10px;">Apps Script<br>プロキシ</div>
+        <div class="arch-label">Google Calendar<br>API を変換</div>
+      </div>
+      <div class="arch-arrow">
+        <div class="arch-arrow-line">
+          <svg width="28" height="12" viewBox="0 0 28 12"><line x1="0" y1="6" x2="22" y2="6" stroke="#999" stroke-width="1.5"/><polygon points="22,2 28,6 22,10" fill="#999"/></svg>
+        </div>
+        <div class="arch-arrow-label">OAuth2</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-box" style="font-size:10px; min-width:80px;">Google<br>Calendar</div>
+        <div class="arch-label">イベント取得</div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="arch-node" style="margin-left:8px;">
+        <div class="arch-box red">E-ink</div>
+        <div class="arch-label">SPI<br>描画</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JSON format -->
+  <div class="section">
+    <div class="section-title">
+      JSONフォーマット（カレンダーエンドポイント）
+      <span class="size-pill green">~200 bytes</span>
+    </div>
+
+    <div class="json-wrap">
+      <div class="json-block">
+        <div class="json-block-label">RESPONSE</div>
+        <pre><span class="p">{</span>
+  <span class="k">"ts"</span><span class="p">:</span> <span class="n">1714262400</span><span class="p">,</span>
+  <span class="k">"ev"</span><span class="p">: [</span>
+    <span class="p">{</span>
+      <span class="k">"d"</span><span class="p">:</span> <span class="s">"04/28"</span><span class="p">,</span>
+      <span class="k">"t"</span><span class="p">:</span> <span class="s">"10:00"</span><span class="p">,</span>
+      <span class="k">"n"</span><span class="p">:</span> <span class="s">"&#12481;&#12540;&#12512;MTG"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="k">"d"</span><span class="p">:</span> <span class="s">"04/29"</span><span class="p">,</span>
+      <span class="k">"t"</span><span class="p">:</span> <span class="s">"14:30"</span><span class="p">,</span>
+      <span class="k">"n"</span><span class="p">:</span> <span class="s">"&#27589;&#21307;&#32773;"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="k">"d"</span><span class="p">:</span> <span class="s">"05/01"</span><span class="p">,</span>
+      <span class="k">"t"</span><span class="p">:</span> <span class="s">"09:00"</span><span class="p">,</span>
+      <span class="k">"n"</span><span class="p">:</span> <span class="s">"&#26376;&#27425;&#12524;&#12499;&#12517;&#12540;"</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span></pre>
+      </div>
+      <div>
+        <table class="field-table">
+          <thead>
+            <tr>
+              <th>キー</th><th>型</th><th>説明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>ts</code></td><td>number</td><td>Unix timestamp（NTP同期チェック用）</td></tr>
+            <tr><td><code>ev</code></td><td>array</td><td>イベント配列（最大3件）</td></tr>
+            <tr><td><code>ev[].d</code></td><td>string</td><td>日付 <code>MM/DD</code> 形式</td></tr>
+            <tr><td><code>ev[].t</code></td><td>string</td><td>開始時刻 <code>HH:MM</code>（終日は <code>"--"</code>）</td></tr>
+            <tr><td><code>ev[].n</code></td><td>string</td><td>イベント名（最大10文字推奨）</td></tr>
+          </tbody>
+        </table>
+        <div class="tip">
+          <strong>キー名を1文字に短縮</strong>して省メモリ化。
+          <code>ArduinoJson</code> でのパースも最小限のメモリで済みます。
+          イベントは<strong>今日から7日以内</strong>の直近3件を返すようにプロキシ側でフィルタします。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAS proxy -->
+  <div class="section">
+    <div class="section-title">Google Apps Script — カレンダープロキシ</div>
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">Code.gs</span>
+        <span class="code-block-lang">Google Apps Script</span>
+      </div>
+      <pre><span class="kw">function</span> <span class="fn">doGet</span>(e) {
+  <span class="kw">const</span> cal  = <span class="tp">CalendarApp</span>.<span class="fn">getDefaultCalendar</span>();
+  <span class="kw">const</span> now  = <span class="kw">new</span> <span class="tp">Date</span>();
+  <span class="kw">const</span> end  = <span class="kw">new</span> <span class="tp">Date</span>(now.getTime() + <span class="num">7</span> * <span class="num">86400000</span>);
+  <span class="kw">const</span> evts = cal.<span class="fn">getEvents</span>(now, end).<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">3</span>);
+
+  <span class="kw">const</span> pad  = n =&gt; <span class="tp">String</span>(n).<span class="fn">padStart</span>(<span class="num">2</span>, <span class="str">'0'</span>);
+  <span class="kw">const</span> fmtD = d =&gt; <span class="str">`</span><span class="num">${pad(d.getMonth()+1)}</span><span class="str">/</span><span class="num">${pad(d.getDate())}</span><span class="str">`</span>;
+  <span class="kw">const</span> fmtT = d =&gt; d.isAllDayEvent()
+    ? <span class="str">'--'</span>
+    : <span class="str">`</span><span class="num">${pad(d.getStartTime().getHours())}</span><span class="str">:</span><span class="num">${pad(d.getStartTime().getMinutes())}</span><span class="str">`</span>;
+
+  <span class="kw">const</span> payload = {
+    ts: <span class="tp">Math</span>.<span class="fn">floor</span>(now.<span class="fn">getTime</span>() / <span class="num">1000</span>),
+    ev: evts.<span class="fn">map</span>(ev =&gt; ({
+      d: <span class="fn">fmtD</span>(ev.<span class="fn">getStartTime</span>()),
+      t: ev.<span class="fn">isAllDayEvent</span>() ? <span class="str">'--'</span>
+           : <span class="str">`</span><span class="num">${pad(ev.getStartTime().getHours())}</span><span class="str">:</span><span class="num">${pad(ev.getStartTime().getMinutes())}</span><span class="str">`</span>,
+      n: ev.<span class="fn">getTitle</span>().<span class="fn">substring</span>(<span class="num">0</span>, <span class="num">10</span>)
+    }))
+  };
+
+  <span class="kw">return</span> <span class="tp">ContentService</span>
+    .<span class="fn">createTextOutput</span>(<span class="tp">JSON</span>.<span class="fn">stringify</span>(payload))
+    .<span class="fn">setMimeType</span>(<span class="tp">ContentService</span>.MimeType.JSON);
+}</pre>
+    </div>
+    <div class="tip">
+      <strong>デプロイ手順：</strong>
+      Apps Script エディタ → デプロイ → 新しいデプロイ → 種類「ウェブアプリ」→
+      アクセス「全員」→ URLをコピーしてESP32に書く。
+    </div>
+  </div>
+
+  <!-- ESP32 snippet -->
+  <div class="section">
+    <div class="section-title">ESP32 — Arduino スニペット</div>
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">main.ino（抜粋）</span>
+        <span class="code-block-lang">C++ / Arduino</span>
+      </div>
+      <pre><span class="cm">// ライブラリ: ArduinoJson, HTTPClient, Adafruit_BME280</span>
+
+<span class="kw">#include</span> <span class="str">&lt;ArduinoJson.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;HTTPClient.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;Adafruit_BME280.h&gt;</span>
+
+<span class="kw">const char</span>* GAS_URL = <span class="str">"https://script.google.com/macros/s/YOUR_ID/exec"</span>;
+
+<span class="kw">struct</span> <span class="tp">Event</span> {
+  <span class="tp">char</span> d[<span class="num">6</span>];   <span class="cm">// "04/28"</span>
+  <span class="tp">char</span> t[<span class="num">6</span>];   <span class="cm">// "10:00"</span>
+  <span class="tp">char</span> n[<span class="num">12</span>];  <span class="cm">// イベント名</span>
+};
+
+<span class="kw">void</span> <span class="fn">fetchCalendar</span>(<span class="tp">Event</span>* events, <span class="tp">uint8_t</span>* count) {
+  <span class="tp">HTTPClient</span> http;
+  http.<span class="fn">begin</span>(GAS_URL);
+  http.<span class="fn">setFollowRedirects</span>(HTTPC_STRICT_FOLLOW_REDIRECTS);
+
+  <span class="tp">int</span> code = http.<span class="fn">GET</span>();
+  <span class="kw">if</span> (code != <span class="num">200</span>) { *count = <span class="num">0</span>; <span class="kw">return</span>; }
+
+  <span class="tp">StaticJsonDocument</span>&lt;<span class="num">512</span>&gt; doc;
+  <span class="fn">deserializeJson</span>(doc, http.<span class="fn">getStream</span>());
+
+  <span class="tp">JsonArray</span> ev = doc[<span class="str">"ev"</span>];
+  *count = <span class="fn">min</span>((<span class="tp">int</span>)ev.<span class="fn">size</span>(), <span class="num">3</span>);
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; *count; i++) {
+    <span class="fn">strlcpy</span>(events[i].d, ev[i][<span class="str">"d"</span>] | <span class="str">""</span>, <span class="kw">sizeof</span>(events[i].d));
+    <span class="fn">strlcpy</span>(events[i].t, ev[i][<span class="str">"t"</span>] | <span class="str">""</span>, <span class="kw">sizeof</span>(events[i].t));
+    <span class="fn">strlcpy</span>(events[i].n, ev[i][<span class="str">"n"</span>] | <span class="str">""</span>, <span class="kw">sizeof</span>(events[i].n));
+  }
+  http.<span class="fn">end</span>();
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="tp">Event</span>   events[<span class="num">3</span>];
+  <span class="tp">uint8_t</span> evCount;
+
+  <span class="cm">// センサー読み取り（直結）</span>
+  <span class="tp">float</span> temp = bme.<span class="fn">readTemperature</span>();
+  <span class="tp">float</span> hum  = bme.<span class="fn">readHumidity</span>();
+  <span class="tp">float</span> pres = bme.<span class="fn">readPressure</span>() / <span class="num">100.0F</span>;
+
+  <span class="cm">// カレンダー取得</span>
+  <span class="fn">fetchCalendar</span>(events, &amp;evCount);
+
+  <span class="cm">// E-ink 描画（ここにWaveshare描画コード）</span>
+  <span class="fn">drawDisplay</span>(temp, hum, pres, events, evCount);
+
+  <span class="fn">delay</span>(<span class="num">5</span> * <span class="num">60</span> * <span class="num">1000</span>); <span class="cm">// 5分スリープ</span>
+}</pre>
+    </div>
+    <div class="tip">
+      <strong>メモリ節約：</strong>
+      <code>StaticJsonDocument&lt;512&gt;</code> で十分。
+      GASのリダイレクト（302→307）に対応するため
+      <code>setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS)</code> が必要です。
+    </div>
+  </div>
+
+  <!-- drawDisplay() -->
+  <div class="section">
+    <div class="section-title">ESP32 — drawDisplay() 描画コード</div>
+
+    <div class="tip" style="margin-bottom:16px;">
+      <strong>前提ライブラリ：</strong>
+      Waveshare の
+      <code>EPD_5in79.h</code> / <code>GUI_Paint.h</code> を
+      <code>lib/</code> に配置。フォントは <code>Font24</code>（英数）と
+      日本語ビットマップフォント <code>Font_JP16</code>（自前 or u8g2 変換）を使用。
+      日本語文字列は UTF-8 → Shift-JIS 変換不要な場合は英語表記で代替可。
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">display.h — バッファ定義</span>
+        <span class="code-block-lang">C++</span>
+      </div>
+      <pre><span class="cm">// 792×272 の1bppバッファ × 2面（Black / Red）</span>
+<span class="kw">#define</span> EPD_W  <span class="num">792</span>
+<span class="kw">#define</span> EPD_H  <span class="num">272</span>
+<span class="kw">#define</span> BUF_SZ (EPD_W * EPD_H / <span class="num">8</span>)   <span class="cm">// 26928 bytes</span>
+
+<span class="kw">static</span> <span class="tp">uint8_t</span> imgBlack[BUF_SZ];
+<span class="kw">static</span> <span class="tp">uint8_t</span> imgRed  [BUF_SZ];</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">display.cpp — drawDisplay()</span>
+        <span class="code-block-lang">C++ / Arduino</span>
+      </div>
+      <pre><span class="kw">#include</span> <span class="str">"EPD_5in79.h"</span>
+<span class="kw">#include</span> <span class="str">"GUI_Paint.h"</span>
+<span class="kw">#include</span> <span class="str">"Fonts/Font20.h"</span>   <span class="cm">// 英数 20px</span>
+<span class="kw">#include</span> <span class="str">"Fonts/Font64.h"</span>   <span class="cm">// 時計用 大フォント</span>
+<span class="kw">#include</span> <span class="str">"display.h"</span>
+
+<span class="cm">// ── レイアウト定数 ─────────────────────────────────────────</span>
+<span class="kw">#define</span> COL_DIV    <span class="num">340</span>   <span class="cm">// 左ペイン幅</span>
+<span class="kw">#define</span> SENSOR_H   <span class="num">100</span>   <span class="cm">// センサー行の高さ</span>
+<span class="kw">#define</span> PAD        <span class="num">16</span>    <span class="cm">// 内側余白</span>
+
+<span class="kw">void</span> <span class="fn">drawDisplay</span>(
+    <span class="tp">float</span>   temp,
+    <span class="tp">float</span>   hum,
+    <span class="tp">float</span>   pres,
+    <span class="tp">Event</span>*  events,
+    <span class="tp">uint8_t</span> evCount)
+{
+  <span class="cm">// ── 初期化 ──────────────────────────────────────────────</span>
+  <span class="tp">Paint</span> paintB, paintR;
+  <span class="fn">Paint_NewImage</span>(&amp;paintB, imgBlack, EPD_W, EPD_H, ROTATE_0);
+  <span class="fn">Paint_NewImage</span>(&amp;paintR, imgRed,   EPD_W, EPD_H, ROTATE_0);
+  <span class="fn">Paint_SelectImage</span>(&amp;paintB); <span class="fn">Paint_Clear</span>(WHITE);
+  <span class="fn">Paint_SelectImage</span>(&amp;paintR); <span class="fn">Paint_Clear</span>(WHITE);
+
+  <span class="cm">// ── 枠線 ────────────────────────────────────────────────</span>
+  <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+  <span class="cm">// 外枠</span>
+  <span class="fn">Paint_DrawRectangle</span>(<span class="num">0</span>, <span class="num">0</span>, EPD_W-<span class="num">1</span>, EPD_H-<span class="num">1</span>, BLACK, DOT_PIXEL_2X2, DRAW_FILL_EMPTY);
+  <span class="cm">// 左右分割線</span>
+  <span class="fn">Paint_DrawLine</span>(COL_DIV, <span class="num">0</span>, COL_DIV, EPD_H, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+  <span class="cm">// センサー/カレンダー分割線（右ペイン）</span>
+  <span class="fn">Paint_DrawLine</span>(COL_DIV, SENSOR_H, EPD_W, SENSOR_H, BLACK, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
+
+  <span class="cm">// ── 左ペイン: 時計 ───────────────────────────────────────</span>
+  <span class="tp">char</span> buf[<span class="num">16</span>];
+  <span class="cm">// 月表示（小さめ）</span>
+  <span class="fn">sprintf</span>(buf, <span class="str">"2026/04"</span>);
+  <span class="fn">Paint_DrawString_EN</span>(PAD, <span class="num">14</span>, buf, &amp;Font20, WHITE, BLACK);
+
+  <span class="cm">// 曜日バッジ（赤背景）</span>
+  <span class="fn">Paint_SelectImage</span>(&amp;paintR);
+  <span class="fn">Paint_DrawRectangle</span>(<span class="num">240</span>, <span class="num">10</span>, <span class="num">330</span>, <span class="num">34</span>, RED, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+  <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+  <span class="fn">Paint_DrawString_EN</span>(<span class="num">252</span>, <span class="num">14</span>, <span class="str">"TUE"</span>, &amp;Font20, RED, WHITE);
+  <span class="cm">// ↑ 日本語フォントがあれば "火" を描画</span>
+
+  <span class="cm">// 時刻（大フォント・赤）</span>
+  <span class="fn">getTimeStr</span>(buf);  <span class="cm">// "14:32" を取得するユーティリティ</span>
+  <span class="fn">Paint_SelectImage</span>(&amp;paintR);
+  <span class="fn">Paint_DrawString_EN</span>(PAD, <span class="num">50</span>, buf, &amp;Font64, WHITE, RED);
+
+  <span class="cm">// 日付（中サイズ）</span>
+  <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+  <span class="fn">sprintf</span>(buf, <span class="str">"28 / 04"</span>);
+  <span class="fn">Paint_DrawString_EN</span>(PAD, <span class="num">188</span>, buf, &amp;Font20, WHITE, BLACK);
+
+  <span class="cm">// ── 右上: センサー ──────────────────────────────────────</span>
+  <span class="kw">const</span> <span class="tp">int</span> sx[<span class="num">3</span>] = {COL_DIV+<span class="num">10</span>, COL_DIV+<span class="num">155</span>, COL_DIV+<span class="num">305</span>};
+  <span class="kw">const</span> <span class="tp">int</span> sw     = <span class="num">148</span>;
+  <span class="cm">// 縦区切り線</span>
+  <span class="fn">Paint_DrawLine</span>(sx[<span class="num">1</span>]-<span class="num">3</span>, <span class="num">0</span>, sx[<span class="num">1</span>]-<span class="num">3</span>, SENSOR_H, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+  <span class="fn">Paint_DrawLine</span>(sx[<span class="num">2</span>]-<span class="num">3</span>, <span class="num">0</span>, sx[<span class="num">2</span>]-<span class="num">3</span>, SENSOR_H, BLACK, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+
+  <span class="cm">// ラベル行</span>
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">0</span>]+<span class="num">8</span>, <span class="num">12</span>, <span class="str">"TEMP"</span>, &amp;Font20, WHITE, BLACK);
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">1</span>]+<span class="num">8</span>, <span class="num">12</span>, <span class="str">"HUM"</span>,  &amp;Font20, WHITE, BLACK);
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">2</span>]+<span class="num">8</span>, <span class="num">12</span>, <span class="str">"PRES"</span>, &amp;Font20, WHITE, BLACK);
+
+  <span class="cm">// 数値行（大きめ）</span>
+  <span class="fn">sprintf</span>(buf, <span class="str">"%.1fC"</span>, temp);
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">0</span>]+<span class="num">4</span>, <span class="num">46</span>, buf, &amp;Font20, WHITE, BLACK);
+  <span class="fn">sprintf</span>(buf, <span class="str">"%.0f%%"</span>, hum);
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">1</span>]+<span class="num">4</span>, <span class="num">46</span>, buf, &amp;Font20, WHITE, BLACK);
+  <span class="fn">sprintf</span>(buf, <span class="str">"%.0fhPa"</span>, pres);
+  <span class="fn">Paint_DrawString_EN</span>(sx[<span class="num">2</span>]+<span class="num">4</span>, <span class="num">46</span>, buf, &amp;Font20, WHITE, BLACK);
+
+  <span class="cm">// ── 右下: 週間カレンダー + イベント ─────────────────────</span>
+  <span class="kw">const</span> <span class="tp">int</span> CAL_TOP  = SENSOR_H + <span class="num">6</span>;
+  <span class="kw">const</span> <span class="tp">int</span> CAL_H    = <span class="num">70</span>;   <span class="cm">// 曜日セル高さ</span>
+  <span class="kw">const</span> <span class="tp">int</span> EVT_TOP  = CAL_TOP + CAL_H + <span class="num">4</span>;
+  <span class="kw">const</span> <span class="tp">int</span> CELL_W   = (<span class="tp">int</span>)((EPD_W - COL_DIV - <span class="num">4</span>) / <span class="num">7</span>);
+
+  <span class="cm">// 曜日セル</span>
+  <span class="kw">const</span> <span class="kw">char</span>* dows[] = {<span class="str">"Mo"</span>,<span class="str">"Tu"</span>,<span class="str">"We"</span>,<span class="str">"Th"</span>,<span class="str">"Fr"</span>,<span class="str">"Sa"</span>,<span class="str">"Su"</span>};
+  <span class="kw">const</span> <span class="tp">int</span>   days[] = {<span class="num">28</span>,<span class="num">29</span>,<span class="num">30</span>,<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>};
+  <span class="kw">const</span> <span class="tp">int</span>   todayIdx = <span class="num">0</span>;  <span class="cm">// 今日 = 月曜（配列index）</span>
+
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; <span class="num">7</span>; i++) {
+    <span class="tp">int</span> cx = COL_DIV + <span class="num">2</span> + i * CELL_W;
+    <span class="kw">bool</span> isToday  = (i == todayIdx);
+    <span class="kw">bool</span> isSun    = (i == <span class="num">6</span>);
+    <span class="kw">bool</span> hasEvent = (i==<span class="num">0</span>||i==<span class="num">1</span>||i==<span class="num">4</span>);
+
+    <span class="kw">if</span> (isToday) {
+      <span class="cm">// 今日セル: 赤枠</span>
+      <span class="fn">Paint_SelectImage</span>(&amp;paintR);
+      <span class="fn">Paint_DrawRectangle</span>(cx, CAL_TOP, cx+CELL_W-<span class="num">2</span>, CAL_TOP+CAL_H,
+                           RED, DOT_PIXEL_2X2, DRAW_FILL_EMPTY);
+      <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+    }
+
+    <span class="cm">// 曜日ラベル</span>
+    <span class="fn">Paint_SelectImage</span>(isSun ? &amp;paintR : &amp;paintB);
+    <span class="fn">Paint_DrawString_EN</span>(cx+<span class="num">4</span>, CAL_TOP+<span class="num">4</span>, dows[i], &amp;Font20,
+                        WHITE, isToday ? RED : BLACK);
+
+    <span class="cm">// 日付数字</span>
+    <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+    <span class="fn">sprintf</span>(buf, <span class="str">"%2d"</span>, days[i]);
+    <span class="fn">Paint_DrawString_EN</span>(cx+<span class="num">4</span>, CAL_TOP+<span class="num">28</span>, buf, &amp;Font20,
+                        WHITE, isToday ? RED : BLACK);
+
+    <span class="cm">// イベントドット</span>
+    <span class="kw">if</span> (hasEvent) {
+      <span class="fn">Paint_SelectImage</span>(isToday ? &amp;paintR : &amp;paintB);
+      <span class="fn">Paint_DrawCircle</span>(cx + CELL_W/<span class="num">2</span>, CAL_TOP+CAL_H-<span class="num">8</span>,
+                       <span class="num">3</span>, isToday?RED:BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+    }
+  }
+
+  <span class="cm">// イベントリスト（3件）</span>
+  <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+  <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; evCount &amp;&amp; i &lt; <span class="num">3</span>; i++) {
+    <span class="tp">int</span> ey = EVT_TOP + i * <span class="num">28</span>;
+    <span class="cm">// 左アクセントバー</span>
+    <span class="fn">Paint_SelectImage</span>(events[i].isToday ? &amp;paintR : &amp;paintB);
+    <span class="fn">Paint_DrawRectangle</span>(COL_DIV+<span class="num">4</span>, ey, COL_DIV+<span class="num">7</span>, ey+<span class="num">22</span>,
+                        BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+    <span class="cm">// 日時</span>
+    <span class="fn">sprintf</span>(buf, <span class="str">"%s %s"</span>, events[i].d, events[i].t);
+    <span class="fn">Paint_SelectImage</span>(&amp;paintB);
+    <span class="fn">Paint_DrawString_EN</span>(COL_DIV+<span class="num">12</span>, ey+<span class="num">2</span>, buf, &amp;Font20, WHITE, BLACK);
+    <span class="cm">// タイトル（ASCII時）</span>
+    <span class="fn">Paint_DrawString_EN</span>(COL_DIV+<span class="num">148</span>, ey+<span class="num">2</span>, events[i].n, &amp;Font20, WHITE, BLACK);
+  }
+
+  <span class="cm">// ── 転送・表示 ──────────────────────────────────────────</span>
+  <span class="fn">EPD_5in79_Init</span>();
+  <span class="fn">EPD_5in79_Display</span>(imgBlack, imgRed);
+  <span class="fn">EPD_5in79_Sleep</span>();   <span class="cm">// 表示後すぐスリープ（焼き付き防止）</span>
+}</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-block-title">utils.cpp — getTimeStr()</span>
+        <span class="code-block-lang">C++</span>
+      </div>
+      <pre><span class="kw">#include</span> <span class="str">&lt;time.h&gt;</span>
+
+<span class="kw">void</span> <span class="fn">getTimeStr</span>(<span class="tp">char</span>* buf) {
+  <span class="tp">time_t</span>    now = <span class="fn">time</span>(<span class="kw">nullptr</span>);
+  <span class="tp">struct tm</span> ti;
+  <span class="fn">localtime_r</span>(&amp;now, &amp;ti);
+  <span class="fn">sprintf</span>(buf, <span class="str">"%02d:%02d"</span>, ti.tm_hour, ti.tm_min);
+}
+
+<span class="kw">void</span> <span class="fn">syncNTP</span>() {
+  <span class="fn">configTzTime</span>(<span class="str">"JST-9"</span>, <span class="str">"ntp.nict.jp"</span>, <span class="str">"pool.ntp.org"</span>);
+  <span class="tp">struct tm</span> ti;
+  <span class="kw">if</span> (!<span class="fn">getLocalTime</span>(&amp;ti, <span class="num">5000</span>)) {
+    <span class="fn">Serial</span>.<span class="fn">println</span>(<span class="str">"NTP sync failed"</span>);
+  }
+}</pre>
+    </div>
+
+    <div class="tip">
+      <strong>日本語文字列について：</strong>
+      Waveshare の標準 <code>GUI_Paint</code> は ASCII フォントのみ。
+      日本語を描画するには ①u8g2 ライブラリのビットマップを流用する、
+      ②イベント名をローマ字・略称にする、③カスタムビットマップフォントを用意する、
+      のいずれかが必要です。Google Calendar 側でイベント名を短い英数字にしておくのが最も手軽です。
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<script type="text/babel">
+// ── E-ink Display Preview (Layout A) ─────────────────────────────────────
+const SENSOR = { temp: 22.3, humidity: 58, pressure: 1013 };
+const TODAY  = { y: 2026, m: 4, d: 28, dow: 2 };
+const DOW_JP = ['日','月','火','水','木','金','土'];
+const EVENTS = [
+  { d: 28, date:'04/28', time: '10:00', title: 'チームMTG', isToday: true },
+  { d: 29, date:'04/29', time: '14:30', title: '歯医者' },
+  { d:  1, date:'05/01', time: '09:00', title: '月次レビュー' },
+];
+
+function getWeek() {
+  const monday = TODAY.d - (TODAY.dow === 0 ? 6 : TODAY.dow - 1);
+  return Array.from({length:7}, (_,i) => ({
+    label: DOW_JP[(1+i)%7], d: monday+i,
+    isToday: monday+i === TODAY.d,
+    isSun: i===6, isSat: i===5,
+  }));
+}
+
+const IconTemp = ({size=18, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <rect x="6.5" y="2" width="3" height="8" rx="1.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <circle cx="8" cy="12" r="2.2" stroke={color} strokeWidth="1.8" fill="none"/>
+    <line x1="8" y1="10" x2="8" y2="6" stroke={color} strokeWidth="1.8"/>
+  </svg>
+);
+const IconHumid = ({size=18, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <path d="M8 2 C8 2 3.5 8 3.5 10.5 a4.5 4.5 0 0 0 9 0 C12.5 8 8 2 8 2Z" stroke={color} strokeWidth="1.8" fill="none"/>
+  </svg>
+);
+const IconPressure = ({size=18, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="9" r="5.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <path d="M4.5 12.5 A5.5 5.5 0 0 1 11.5 12.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <line x1="8" y1="9" x2="10.5" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="8" cy="9" r="1.2" fill={color}/>
+  </svg>
+);
+
+function DisplayPreview() {
+  const week = getWeek();
+  const RED = '#D32F2F';
+  const [time, setTime] = React.useState('');
+
+  React.useEffect(() => {
+    const tick = () => {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      setTime(`${h}:${m}`);
+    };
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div style={{display:'flex', justifyContent:'center', margin:'0 0 8px'}}>
+      <div style={{
+        width:792, height:272, background:'#fff', display:'flex',
+        fontFamily:"'Space Mono', monospace", overflow:'hidden',
+        border:'2px solid #111', flexShrink:0
+      }}>
+        {/* Left — Clock */}
+        <div style={{
+          width:340, height:272, borderRight:'2px solid #111',
+          display:'flex', flexDirection:'column', justifyContent:'center',
+          alignItems:'center', padding:'16px 20px', position:'relative'
+        }}>
+          <div style={{
+            position:'absolute', top:14, left:20, right:20,
+            display:'flex', justifyContent:'space-between', alignItems:'baseline'
+          }}>
+            <span style={{fontFamily:"'Noto Sans JP'", fontSize:14, fontWeight:600, color:'#111', letterSpacing:'0.05em'}}>
+              2026年4月
+            </span>
+            <span style={{fontFamily:"'Noto Sans JP'", fontSize:14, fontWeight:700,
+              color:'#fff', background:RED, padding:'2px 9px'}}>火曜日</span>
+          </div>
+          <div style={{fontSize:86, fontWeight:700, letterSpacing:'-0.04em', lineHeight:1, color:RED, marginTop:8}}>
+            {time || '14:32'}
+          </div>
+          <div style={{marginTop:10, fontSize:32, fontWeight:700, color:'#111', letterSpacing:'0.02em'}}>
+            28
+            <span style={{fontSize:18, fontWeight:400, marginLeft:4, color:'#555'}}>/ 04</span>
+          </div>
+        </div>
+
+        {/* Right */}
+        <div style={{flex:1, display:'flex', flexDirection:'column'}}>
+          {/* Sensors */}
+          <div style={{flex:'0 0 auto', display:'flex', borderBottom:'2px solid #111'}}>
+            {[
+              {icon:<IconTemp/>, val:`${SENSOR.temp}°`, unit:'C', label:'気温'},
+              {icon:<IconHumid/>, val:`${SENSOR.humidity}`, unit:'%', label:'湿度'},
+              {icon:<IconPressure/>, val:`${SENSOR.pressure}`, unit:'hPa', label:'気圧'},
+            ].map((s,i) => (
+              <div key={i} style={{flex:1, padding:'10px 0 8px', display:'flex', flexDirection:'column',
+                alignItems:'center', borderRight:i<2?'1.5px solid #ddd':'none'}}>
+                <div style={{display:'flex', alignItems:'center', gap:5, marginBottom:3}}>
+                  {s.icon}
+                  <span style={{fontFamily:"'Noto Sans JP'", fontSize:12, fontWeight:600, color:'#555'}}>{s.label}</span>
+                </div>
+                <div style={{display:'flex', alignItems:'baseline', gap:2}}>
+                  <span style={{fontSize:28, fontWeight:700, color:'#111', letterSpacing:'-0.02em'}}>{s.val}</span>
+                  <span style={{fontSize:12, fontWeight:600, color:'#666', fontFamily:"'Noto Sans JP'"}}>{s.unit}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar + Events */}
+          <div style={{flex:1, display:'flex', flexDirection:'column', padding:'8px 10px 6px'}}>
+            <div style={{display:'flex', gap:3, marginBottom:6}}>
+              {week.map((d,i) => {
+                const hasEv = EVENTS.some(e => e.d === d.d);
+                return (
+                  <div key={i} style={{
+                    flex:1, display:'flex', flexDirection:'column', alignItems:'center',
+                    border: d.isToday ? `2px solid ${RED}` : '1.5px solid #ddd',
+                    padding:'3px 2px', background: d.isToday ? 'rgba(211,47,47,0.05)' : '#fff'
+                  }}>
+                    <div style={{fontSize:11, fontFamily:"'Noto Sans JP'", fontWeight:700,
+                      color: d.isSun ? RED : d.isSat ? '#1565C0' : '#555', marginBottom:1}}>{d.label}</div>
+                    <div style={{fontSize:15, fontWeight:d.isToday?700:600,
+                      color: d.isToday ? RED : '#111', fontFamily:"'Space Mono'"}}>{d.d}</div>
+                    <div style={{width:4, height:4, borderRadius:'50%', marginTop:2,
+                      background: hasEv ? (d.isToday ? RED : '#333') : 'transparent'}}/>
+                  </div>
+                );
+              })}
+            </div>
+            <div style={{flex:1, display:'flex', flexDirection:'column', gap:3}}>
+              {EVENTS.map((ev,i) => (
+                <div key={i} style={{
+                  display:'flex', alignItems:'center', gap:6, padding:'3px 6px',
+                  background: ev.isToday ? 'rgba(211,47,47,0.06)' : '#f7f7f7',
+                  borderLeft:`3px solid ${ev.isToday ? RED : '#bbb'}`
+                }}>
+                  <span style={{fontFamily:"'Space Mono'", fontSize:12, fontWeight:700,
+                    color: ev.isToday ? RED : '#666', flexShrink:0}}>
+                    {ev.date} {ev.time}
+                  </span>
+                  <span style={{fontFamily:"'Noto Sans JP'", fontSize:13, fontWeight:600,
+                    color:'#111', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis'}}>
+                    {ev.title}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('preview-root')).render(<DisplayPreview/>);
+</script>
+</body>
+</html>

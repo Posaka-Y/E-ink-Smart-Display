@@ -1,0 +1,702 @@
+(kicad_sch
+	(version 20260306)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid 35569e7f-125e-444d-8953-68663978d42e)
+	(paper "A4")
+	(title_block
+		(title "E-ink Smart Display")
+		(date "2026-05-03")
+	)
+	(lib_symbols)
+	(symbol
+		(lib_id "MCU_Module:ESP32-WROOM-32")
+		(at 55 82 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000001)
+		(property "Reference" "U1"
+			(at 55 56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "ESP32-WROOM-32"
+			(at 55 59 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "RF_Module:ESP32-WROOM-32"
+			(at 55 82 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000101)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000102)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x08_Pin")
+		(at 128 62 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000002)
+		(property "Reference" "J1"
+			(at 128 48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "Waveshare_5.79in_e-Paper_SPI"
+			(at 128 51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm_Vertical"
+			(at 128 62 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000201)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000202)
+		)
+		(pin "3"
+			(uuid 10000000-0000-4000-8000-000000000203)
+		)
+		(pin "4"
+			(uuid 10000000-0000-4000-8000-000000000204)
+		)
+		(pin "5"
+			(uuid 10000000-0000-4000-8000-000000000205)
+		)
+		(pin "6"
+			(uuid 10000000-0000-4000-8000-000000000206)
+		)
+		(pin "7"
+			(uuid 10000000-0000-4000-8000-000000000207)
+		)
+		(pin "8"
+			(uuid 10000000-0000-4000-8000-000000000208)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x04_Pin")
+		(at 128 96 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000003)
+		(property "Reference" "J2"
+			(at 128 86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "BME280_AHT20_I2C"
+			(at 128 89 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical"
+			(at 128 96 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000301)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000302)
+		)
+		(pin "3"
+			(uuid 10000000-0000-4000-8000-000000000303)
+		)
+		(pin "4"
+			(uuid 10000000-0000-4000-8000-000000000304)
+		)
+	)
+	(symbol
+		(lib_id "Connector:Conn_01x03_Pin")
+		(at 128 123 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000004)
+		(property "Reference" "J3"
+			(at 128 115 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PIR_Sensor"
+			(at 128 118 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical"
+			(at 128 123 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000401)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000402)
+		)
+		(pin "3"
+			(uuid 10000000-0000-4000-8000-000000000403)
+		)
+	)
+	(symbol
+		(lib_id "Connector:USB_C_Receptacle_USB2.0")
+		(at 33 144 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000005)
+		(property "Reference" "J4"
+			(at 33 125 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "USB-C_5V_IN"
+			(at 33 128 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12"
+			(at 33 144 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "A1"
+			(uuid 10000000-0000-4000-8000-000000000501)
+		)
+		(pin "A4"
+			(uuid 10000000-0000-4000-8000-000000000502)
+		)
+	)
+	(symbol
+		(lib_id "Regulator_Linear:AMS1117-3.3")
+		(at 72 144 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000006)
+		(property "Reference" "U2"
+			(at 72 135 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "AMS1117-3.3"
+			(at 72 138 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-223-3_TabPin2"
+			(at 72 144 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000601)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000602)
+		)
+		(pin "3"
+			(uuid 10000000-0000-4000-8000-000000000603)
+		)
+	)
+	(symbol
+		(lib_id "Switch:SW_Push")
+		(at 36 106 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000007)
+		(property "Reference" "SW1"
+			(at 36 99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "RESET"
+			(at 36 112 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Button_Switch_SMD:SW_SPST_SKQG_WithStem"
+			(at 36 106 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000701)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000702)
+		)
+	)
+	(symbol
+		(lib_id "Device:LED")
+		(at 91 119 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000008)
+		(property "Reference" "D1"
+			(at 91 113 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_LED"
+			(at 91 125 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_0603_1608Metric"
+			(at 91 119 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000801)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000802)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 91 106 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-000000000009)
+		(property "Reference" "R1"
+			(at 91 100 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "1k"
+			(at 91 112 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 91 106 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000901)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000902)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 109 106 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-00000000000a)
+		(property "Reference" "R2"
+			(at 109 100 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 109 112 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 109 106 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000a01)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000a02)
+		)
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 109 121 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-00000000000b)
+		(property "Reference" "R3"
+			(at 109 115 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4.7k"
+			(at 109 127 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 109 121 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000b01)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000b02)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 88 144 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-00000000000c)
+		(property "Reference" "C1"
+			(at 88 138 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "10uF"
+			(at 88 150 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0805_2012Metric"
+			(at 88 144 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000c01)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000c02)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 103 144 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 10000000-0000-4000-8000-00000000000d)
+		(property "Reference" "C2"
+			(at 103 138 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "100nF"
+			(at 103 150 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
+			(at 103 144 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				hide
+			)
+		)
+		(pin "1"
+			(uuid 10000000-0000-4000-8000-000000000d01)
+		)
+		(pin "2"
+			(uuid 10000000-0000-4000-8000-000000000d02)
+		)
+	)
+	(label "+3V3"
+		(at 46 51 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001001)
+	)
+	(label "GND"
+		(at 46 54 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001002)
+	)
+	(label "EPD_MOSI"
+		(at 143 56 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001003)
+	)
+	(label "EPD_SCK"
+		(at 143 59 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001004)
+	)
+	(label "EPD_CS"
+		(at 143 62 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001005)
+	)
+	(label "EPD_DC"
+		(at 143 65 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001006)
+	)
+	(label "EPD_RST"
+		(at 143 68 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001007)
+	)
+	(label "EPD_BUSY"
+		(at 143 71 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001008)
+	)
+	(label "I2C_SDA_GPIO21"
+		(at 143 96 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-000000001009)
+	)
+	(label "I2C_SCL_GPIO20"
+		(at 143 99 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-00000000100a)
+	)
+	(label "PIR_GPIO1"
+		(at 143 123 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid 10000000-0000-4000-8000-00000000100b)
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)

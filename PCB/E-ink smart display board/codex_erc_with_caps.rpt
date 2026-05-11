@@ -1,0 +1,36 @@
+ERC report (2026-05-03T21:27:49, Encoding UTF8)
+Report includes: Errors, Warnings
+
+***** Sheet /
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(63.50 mm, 73.66 mm): Symbol U1 [ESP32_DEVKIT_V1]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(142.24 mm, 60.96 mm): Symbol J2 [CONN_01X09]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(142.24 mm, 99.06 mm): Symbol J1 [CONN_01X03]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(177.80 mm, 53.34 mm): Symbol C1 [C]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(142.24 mm, 124.46 mm): Symbol U2 [AHT20_BMP280]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(177.80 mm, 71.12 mm): Symbol C2 [C]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(177.80 mm, 101.60 mm): Symbol C3 [C]
+[lib_symbol_issues]: 現在の構成にはシンボル ライブラリ 'Local' が含まれていません
+    ; warning
+    @(177.80 mm, 124.46 mm): Symbol C4 [C]
+
+ ** ERC messages: 8  Errors 0  Warnings 8
+
+ ** Ignored checks:
+    - Global label only appears once in the schematic
+    - Four connection points are joined together
+    - SPICE model issue
+    - Assigned footprint doesn't match footprint filters

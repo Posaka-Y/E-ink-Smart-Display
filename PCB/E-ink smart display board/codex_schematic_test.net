@@ -1,0 +1,773 @@
+(export
+	(version "E")
+	(design
+		(source "C:\\Users\\posak\\Desktop\\趣味\\E-ink-Smart-Display\\PCB\\E-ink smart display board\\E-ink smart display board.kicad_sch")
+		(date "2026-05-03T18:20:15")
+		(tool "Eeschema 10.0.1")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title "E-ink Smart Display")
+				(company)
+				(rev)
+				(date "2026-05-03")
+				(source "E-ink smart display board.kicad_sch")
+				(comment
+					(number "1")
+					(value "Rebuilt from PCB and firmware BOARD_ESP32_DEVKIT pin map")
+				)
+				(comment
+					(number "2")
+					(value "")
+				)
+				(comment
+					(number "3")
+					(value "")
+				)
+				(comment
+					(number "4")
+					(value "")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components
+		(comp
+			(ref "J1")
+			(value "PIR_Sensor")
+			(footprint "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical")
+			(fields
+				(field
+					(name "Footprint") "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Local")
+				(part "CONN_01X03")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "22222222-2222-4222-8222-222222222222")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J2")
+			(value "Waveshare_5.79in_e-Paper_B")
+			(footprint "Connector_JST:JST_ZH_B9B-ZR_1x09_P1.50mm_Vertical")
+			(fields
+				(field
+					(name "Footprint") "Connector_JST:JST_ZH_B9B-ZR_1x09_P1.50mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Local")
+				(part "CONN_01X09")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "33333333-3333-4333-8333-333333333333")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U1")
+			(value "ESP32-DEVKIT-V1")
+			(footprint "ESP32-DEVKIT-V1 (1):MODULE_ESP32_DEVKIT_V1")
+			(fields
+				(field
+					(name "Footprint") "ESP32-DEVKIT-V1 (1):MODULE_ESP32_DEVKIT_V1")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Local")
+				(part "ESP32_DEVKIT_V1")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "11111111-1111-4111-8111-111111111111")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "29")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "19")
+						)
+						(pin
+							(num "14")
+						)
+						(pin
+							(num "11")
+						)
+						(pin
+							(num "21")
+						)
+						(pin
+							(num "22")
+						)
+						(pin
+							(num "23")
+						)
+						(pin
+							(num "24")
+						)
+						(pin
+							(num "25")
+						)
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "15")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U2")
+			(value "AHT20_BMP280")
+			(footprint "AHT20_BMP280 (1):AHT20_BMP280")
+			(fields
+				(field
+					(name "Footprint") "AHT20_BMP280 (1):AHT20_BMP280")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(libsource
+				(lib "Local")
+				(part "AHT20_BMP280")
+				(description "")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "44444444-4444-4444-8444-444444444444")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "GND")
+						)
+						(pin
+							(num "SCL")
+						)
+						(pin
+							(num "SDA")
+						)
+						(pin
+							(num "VDD")
+						)
+					)
+				)
+			)
+		)
+	)
+	(groups)
+	(variants)
+	(libparts
+		(libpart
+			(lib "Local")
+			(part "AHT20_BMP280")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "AHT20_BMP280")
+				(field
+					(name "Footprint") "AHT20_BMP280 (1):AHT20_BMP280")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "GND")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "SCL")
+					(name "SCL")
+					(type "bidirectional")
+				)
+				(pin
+					(num "SDA")
+					(name "SDA")
+					(type "bidirectional")
+				)
+				(pin
+					(num "VDD")
+					(name "VDD")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Local")
+			(part "CONN_01X03")
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "Conn_01x03")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "Pin_1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "Pin_2")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "Pin_3")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Local")
+			(part "CONN_01X09")
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "Conn_01x09")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "Pin_1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "Pin_2")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "Pin_3")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "Pin_4")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "Pin_5")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "Pin_6")
+					(type "passive")
+				)
+				(pin
+					(num "7")
+					(name "Pin_7")
+					(type "passive")
+				)
+				(pin
+					(num "8")
+					(name "Pin_8")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "Pin_9")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Local")
+			(part "ESP32_DEVKIT_V1")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "ESP32-DEVKIT-V1")
+				(field
+					(name "Footprint") "ESP32-DEVKIT-V1 (1):MODULE_ESP32_DEVKIT_V1")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description")
+				)
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "3V3")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "D18")
+					(type "bidirectional")
+				)
+				(pin
+					(num "11")
+					(name "D21")
+					(type "bidirectional")
+				)
+				(pin
+					(num "14")
+					(name "D22")
+					(type "bidirectional")
+				)
+				(pin
+					(num "15")
+					(name "D23")
+					(type "bidirectional")
+				)
+				(pin
+					(num "19")
+					(name "D34")
+					(type "input")
+				)
+				(pin
+					(num "21")
+					(name "D32")
+					(type "output")
+				)
+				(pin
+					(num "22")
+					(name "D33")
+					(type "input")
+				)
+				(pin
+					(num "23")
+					(name "D25")
+					(type "output")
+				)
+				(pin
+					(num "24")
+					(name "D26")
+					(type "output")
+				)
+				(pin
+					(num "25")
+					(name "D27")
+					(type "output")
+				)
+				(pin
+					(num "29")
+					(name "GND")
+					(type "passive")
+				)
+			)
+		)
+	)
+	(libraries)
+	(nets
+		(net
+			(code "1")
+			(name "/3V3")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "1")
+				(pinfunction "Pin_1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "1")
+				(pinfunction "Pin_1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "1")
+				(pinfunction "3V3_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "VDD")
+				(pinfunction "VDD_VDD")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "2")
+			(name "/EPD_BUSY")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "8")
+				(pinfunction "Pin_8_8")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "22")
+				(pinfunction "D33_22")
+				(pintype "input")
+			)
+		)
+		(net
+			(code "3")
+			(name "/EPD_CLK")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "4")
+				(pinfunction "Pin_4_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "9")
+				(pinfunction "D18_9")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "4")
+			(name "/EPD_CS")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "5")
+				(pinfunction "Pin_5_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "25")
+				(pinfunction "D27_25")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "5")
+			(name "/EPD_DC")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "6")
+				(pinfunction "Pin_6_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "24")
+				(pinfunction "D26_24")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "6")
+			(name "/EPD_DIN")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "3")
+				(pinfunction "Pin_3_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "15")
+				(pinfunction "D23_15")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "7")
+			(name "/EPD_PWR")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "9")
+				(pinfunction "Pin_9_9")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "21")
+				(pinfunction "D32_21")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "8")
+			(name "/EPD_RST")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "7")
+				(pinfunction "Pin_7_7")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "23")
+				(pinfunction "D25_23")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "9")
+			(name "/GND")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "3")
+				(pinfunction "Pin_3_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "2")
+				(pinfunction "Pin_2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "29")
+				(pinfunction "GND_29")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "GND")
+				(pinfunction "GND_GND")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "10")
+			(name "/I2C_SCL")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "14")
+				(pinfunction "D22_14")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "SCL")
+				(pinfunction "SCL_SCL")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "11")
+			(name "/I2C_SDA")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "11")
+				(pinfunction "D21_11")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "SDA")
+				(pinfunction "SDA_SDA")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "12")
+			(name "/PIR_OUT")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "2")
+				(pinfunction "Pin_2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "19")
+				(pinfunction "D34_19")
+				(pintype "input")
+			)
+		)
+	)
+)

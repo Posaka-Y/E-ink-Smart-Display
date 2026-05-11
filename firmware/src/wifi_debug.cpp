@@ -50,6 +50,8 @@ static void print_status(wl_status_t s) {
 
 void setup() {
     Serial.begin(115200);
+    uint32_t serialStart = millis();
+    while (!Serial && millis() - serialStart < 3000) delay(10);
     delay(500);
     Serial.println("\n=== WiFi Debug ===");
 
@@ -59,7 +61,8 @@ void setup() {
 #ifdef WIFI_FIXED_MAC
     {
         uint8_t m[] = WIFI_FIXED_MAC;
-        esp_wifi_set_mac(WIFI_IF_STA, m);
+        esp_err_t err = esp_wifi_set_mac(WIFI_IF_STA, m);
+        Serial.printf("Set MAC : %s\n", esp_err_to_name(err));
     }
 #endif
 
@@ -69,6 +72,21 @@ void setup() {
                   mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
     Serial.printf("SSID    : %s\n", WIFI_SSID);
 
+    // ── スキャンで対象SSIDのRSSIを確認 ──────────────────────────────────────
+    Serial.println("Scanning...");
+    int n = WiFi.scanNetworks();
+    int targetRSSI = -999;
+    for (int i = 0; i < n; i++) {
+        bool isTarget = (WiFi.SSID(i) == WIFI_SSID);
+        Serial.printf("  %s %s  %d dBm  ch%d\n",
+                      isTarget ? ">>>" : "   ",
+                      WiFi.SSID(i).c_str(), WiFi.RSSI(i), WiFi.channel(i));
+        if (isTarget && WiFi.RSSI(i) > targetRSSI) targetRSSI = WiFi.RSSI(i);
+    }
+    if (targetRSSI == -999) Serial.println("  [!] Target SSID not found!");
+    else                    Serial.printf("  Target RSSI: %d dBm\n", targetRSSI);
+    WiFi.scanDelete();
+
 #if WIFI_USE_ENTERPRISE
     const char* method_str =
         (IDENTITY_VARIANT == 4) ? "TTLS+MSCHAPv2" :
@@ -77,22 +95,22 @@ void setup() {
     Serial.printf("identity: %s\n", TEST_IDENTITY);
     Serial.printf("username: %s\n", TEST_USERNAME);
 
-    esp_eap_client_set_disable_time_check(true);
-    esp_eap_client_use_default_cert_bundle(false);
+    Serial.printf("time chk: %s\n", esp_err_to_name(esp_eap_client_set_disable_time_check(true)));
+    Serial.printf("cert bdl: %s\n", esp_err_to_name(esp_eap_client_use_default_cert_bundle(false)));
 
 #if IDENTITY_VARIANT == 4
-    esp_eap_client_set_eap_methods(ESP_EAP_TYPE_TTLS);
-    esp_eap_client_set_ttls_phase2_method(ESP_EAP_TTLS_PHASE2_MSCHAPV2);
+    Serial.printf("eap type: %s\n", esp_err_to_name(esp_eap_client_set_eap_methods(ESP_EAP_TYPE_TTLS)));
+    Serial.printf("phase2  : %s\n", esp_err_to_name(esp_eap_client_set_ttls_phase2_method(ESP_EAP_TTLS_PHASE2_MSCHAPV2)));
 #elif IDENTITY_VARIANT == 5
     // メソッド制限なし — サーバーに交渉させる
 #else
-    esp_eap_client_set_eap_methods(ESP_EAP_TYPE_PEAP);
+    Serial.printf("eap type: %s\n", esp_err_to_name(esp_eap_client_set_eap_methods(ESP_EAP_TYPE_PEAP)));
 #endif
 
-    esp_eap_client_set_identity((uint8_t*)TEST_IDENTITY, strlen(TEST_IDENTITY));
-    esp_eap_client_set_username((uint8_t*)TEST_USERNAME, strlen(TEST_USERNAME));
-    esp_eap_client_set_password((uint8_t*)EAP_PASSWORD, strlen(EAP_PASSWORD));
-    esp_wifi_sta_enterprise_enable();
+    Serial.printf("identity: %s\n", esp_err_to_name(esp_eap_client_set_identity((uint8_t*)TEST_IDENTITY, strlen(TEST_IDENTITY))));
+    Serial.printf("username: %s\n", esp_err_to_name(esp_eap_client_set_username((uint8_t*)TEST_USERNAME, strlen(TEST_USERNAME))));
+    Serial.printf("password: %s\n", esp_err_to_name(esp_eap_client_set_password((uint8_t*)EAP_PASSWORD, strlen(EAP_PASSWORD))));
+    Serial.printf("ent en  : %s\n", esp_err_to_name(esp_wifi_sta_enterprise_enable()));
     WiFi.begin(WIFI_SSID);
 #else
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);

@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-ink Smart Display — Layout Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=IBM+Plex+Sans+JP:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1a1a; font-family: 'Noto Sans JP', sans-serif; }
+</style>
+</head>
+<body>
+<script type="text/babel">
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "showSeconds": false,
+  "use24h": true,
+  "tempUnit": "C",
+  "showBattery": false,
+  "redAccentTarget": "clock",
+  "demoTime": "14:32"
+}/*EDITMODE-END*/;
+
+// ── Shared E-ink data ──────────────────────────────────────────────────────
+const SENSOR = { temp: 22.3, humidity: 58, pressure: 1013 };
+const TODAY = { y: 2026, m: 4, d: 28, dow: 2 }; // 0=Sun
+const DOW_JP = ['日','月','火','水','木','金','土'];
+const DOW_FULL = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const EVENTS = [
+  { d: 28, time: '10:00', title: 'チームMTG', isToday: true },
+  { d: 29, time: '14:30', title: '歯医者' },
+  { d:  1, time: '09:00', title: '月次レビュー', isFri: true },
+];
+
+// Week Mon→Sun starting from today's week
+function getWeek() {
+  const monday = TODAY.d - (TODAY.dow === 0 ? 6 : TODAY.dow - 1);
+  return Array.from({length:7}, (_,i) => ({
+    label: DOW_JP[(1+i)%7],
+    d: monday + i,
+    isToday: monday + i === TODAY.d,
+    isSun: i === 6,
+    isSat: i === 5,
+    hasEvent: [1,3,5].includes(i)
+  }));
+}
+
+// ── SVG Icons (minimal, E-ink style) ─────────────────────────────────────
+const IconTemp = ({size=16, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <rect x="6.5" y="2" width="3" height="8" rx="1.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <circle cx="8" cy="12" r="2.2" stroke={color} strokeWidth="1.8" fill="none"/>
+    <line x1="8" y1="10" x2="8" y2="6" stroke={color} strokeWidth="1.8"/>
+  </svg>
+);
+const IconHumid = ({size=16, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <path d="M8 2 C8 2 3.5 8 3.5 10.5 a4.5 4.5 0 0 0 9 0 C12.5 8 8 2 8 2Z" stroke={color} strokeWidth="1.8" fill="none"/>
+  </svg>
+);
+const IconPressure = ({size=16, color='#111'}) => (
+  <svg width={size} height={size} viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="9" r="5.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <path d="M4.5 12.5 A5.5 5.5 0 0 1 11.5 12.5" stroke={color} strokeWidth="1.8" fill="none"/>
+    <line x1="8" y1="9" x2="10.5" y2="6" stroke={color} strokeWidth="2" strokeLinecap="round"/>
+    <circle cx="8" cy="9" r="1.2" fill={color}/>
+  </svg>
+);
+
+// ── LAYOUT A — "Split" ────────────────────────────────────────────────────
+// Left: Clock + Date big | Right: Sensors + Weekly strip
+function LayoutA({ tweaks }) {
+  const week = getWeek();
+  const RED = '#D32F2F';
+  const [time, setTime] = React.useState(tweaks.demoTime || '14:32');
+
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      const now = new Date();
+      const h = tweaks.use24h ? now.getHours() : (now.getHours()%12||12);
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      setTime(tweaks.showSeconds ? `${String(h).padStart(2,'0')}:${m}:${s}` : `${String(h).padStart(2,'0')}:${m}`);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [tweaks.use24h, tweaks.showSeconds]);
+
+  return (
+    <div style={{
+      width:792, height:272, background:'#fff', display:'flex',
+      fontFamily:"'Space Mono', monospace", overflow:'hidden',
+      border:'2px solid #111', position:'relative'
+    }}>
+      {/* Left pane — Clock */}
+      <div style={{
+        width:340, height:272, borderRight:'2px solid #111',
+        display:'flex', flexDirection:'column', justifyContent:'center',
+        alignItems:'center', padding:'16px 20px', position:'relative'
+      }}>
+        {/* Date top */}
+        <div style={{
+          position:'absolute', top:14, left:20, right:20,
+          display:'flex', justifyContent:'space-between', alignItems:'baseline'
+        }}>
+          <span style={{fontFamily:"'Noto Sans JP'", fontSize:14, fontWeight:600, letterSpacing:'0.05em', color:'#111'}}>
+            2026年4月
+          </span>
+          <span style={{
+            fontFamily:"'Noto Sans JP'", fontSize:14, fontWeight:700,
+            color:'#fff', background:RED, padding:'2px 9px', letterSpacing:'0.05em'
+          }}>
+            火曜日
+          </span>
+        </div>
+
+        {/* Big clock */}
+        <div style={{
+          fontSize: tweaks.showSeconds ? 68 : 86,
+          fontWeight:700, letterSpacing:'-0.04em', lineHeight:1,
+          color: tweaks.redAccentTarget === 'clock' ? RED : '#111',
+          marginTop:8
+        }}>
+          {time}
+        </div>
+
+        {/* Date big */}
+        <div style={{
+          marginTop:10, fontSize:32, fontWeight:700, color:'#111',
+          letterSpacing:'0.02em', fontFamily:"'Space Mono'"
+        }}>
+          28
+          <span style={{fontSize:18, fontWeight:400, marginLeft:4, color:'#555'}}>/ 04</span>
+        </div>
+      </div>
+
+      {/* Right pane */}
+      <div style={{flex:1, display:'flex', flexDirection:'column'}}>
+
+        {/* Sensors row */}
+        <div style={{
+          flex:'0 0 auto', display:'flex', borderBottom:'2px solid #111'
+        }}>
+          {[
+            { icon:<IconTemp size={18}/>, val:`${SENSOR.temp}°`, unit:'C', label:'気温' },
+            { icon:<IconHumid size={18}/>, val:`${SENSOR.humidity}`, unit:'%', label:'湿度' },
+            { icon:<IconPressure size={18}/>, val:`${SENSOR.pressure}`, unit:'hPa', label:'気圧' },
+          ].map((s,i) => (
+            <div key={i} style={{
+              flex:1, padding:'12px 0 10px', display:'flex', flexDirection:'column',
+              alignItems:'center', borderRight: i<2 ? '1.5px solid #ddd' : 'none'
+            }}>
+              <div style={{display:'flex', alignItems:'center', gap:5, marginBottom:3}}>
+                {s.icon}
+                <span style={{fontFamily:"'Noto Sans JP'", fontSize:12, fontWeight:600, color:'#555'}}>{s.label}</span>
+              </div>
+              <div style={{display:'flex', alignItems:'baseline', gap:2}}>
+                <span style={{
+                  fontSize:28, fontWeight:700, color: tweaks.redAccentTarget === 'sensors' ? RED : '#111',
+                  letterSpacing:'-0.02em'
+                }}>{s.val}</span>
+                <span style={{fontSize:12, fontWeight:600, color:'#666', fontFamily:"'Noto Sans JP'"}}>{s.unit}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Weekly calendar + Events */}
+        <div style={{flex:1, display:'flex', flexDirection:'column', padding:'8px 12px 6px'}}>
+          {/* Week strip */}
+          <div style={{display:'flex', gap:4, marginBottom:7}}>
+            {week.map((d,i) => {
+              const hasEv = EVENTS.some(e => e.d === d.d);
+              return (
+                <div key={i} style={{
+                  flex:1, display:'flex', flexDirection:'column', alignItems:'center',
+                  border: d.isToday ? `2px solid ${RED}` : '1.5px solid #ddd',
+                  padding:'3px 2px 3px',
+                  background: d.isToday ? 'rgba(211,47,47,0.05)' : '#fff'
+                }}>
+                  <div style={{fontSize:11, fontFamily:"'Noto Sans JP'", fontWeight:700,
+                    color: d.isSun ? RED : d.isSat ? '#1565C0' : '#555', marginBottom:1
+                  }}>{d.label}</div>
+                  <div style={{fontSize:15, fontWeight: d.isToday ? 700 : 600,
+                    color: d.isToday ? RED : '#111', fontFamily:"'Space Mono'"
+                  }}>{d.d}</div>
+                  <div style={{width:4, height:4, borderRadius:'50%', marginTop:2,
+                    background: hasEv ? (d.isToday ? RED : '#333') : 'transparent'
+                  }}/>
+                </div>
+              );
+            })}
+          </div>
+          {/* Event list */}
+          <div style={{flex:1, display:'flex', flexDirection:'column', gap:3}}>
+            {EVENTS.map((ev,i) => (
+              <div key={i} style={{
+                display:'flex', alignItems:'center', gap:6,
+                padding:'3px 6px',
+                background: ev.isToday ? 'rgba(211,47,47,0.06)' : '#f7f7f7',
+                borderLeft: `2.5px solid ${ev.isToday ? RED : '#bbb'}`
+              }}>
+                <span style={{fontFamily:"'Space Mono'", fontSize:12, fontWeight:700, color: ev.isToday ? RED : '#666', flexShrink:0}}>
+                  {ev.d < 30 ? `4/${ev.d}` : `5/${ev.d}`} {ev.time}
+                </span>
+                <span style={{fontFamily:"'Noto Sans JP'", fontSize:13, fontWeight:600,
+                  color:'#111', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis'
+                }}>{ev.title}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── LAYOUT B — "Clock Dominant" ───────────────────────────────────────────
+// Huge clock on left 55%, right column sensors stacked, bottom strip calendar
+function LayoutB({ tweaks }) {
+  const week = getWeek();
+  const RED = '#D32F2F';
+  const [time, setTime] = React.useState(tweaks.demoTime || '14:32');
+
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      const now = new Date();
+      const h = tweaks.use24h ? now.getHours() : (now.getHours()%12||12);
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      setTime(tweaks.showSeconds ? `${String(h).padStart(2,'0')}:${m}:${s}` : `${String(h).padStart(2,'0')}:${m}`);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [tweaks.use24h, tweaks.showSeconds]);
+
+  return (
+    <div style={{
+      width:792, height:272, background:'#fff', display:'flex', flexDirection:'column',
+      fontFamily:"'Space Mono', monospace", overflow:'hidden',
+      border:'2px solid #111', position:'relative'
+    }}>
+      {/* Top area */}
+      <div style={{flex:1, display:'flex', minHeight:0}}>
+
+        {/* Clock block */}
+        <div style={{
+          flex:'0 0 460px', borderRight:'2px solid #111',
+          display:'flex', flexDirection:'column', justifyContent:'flex-end',
+          padding:'14px 20px 10px', background:'#111', position:'relative'
+        }}>
+          {/* Date top-left */}
+          <div style={{
+            position:'absolute', top:14, left:20,
+            fontFamily:"'Noto Sans JP'", fontSize:14, color:'#999', fontWeight:500
+          }}>
+            2026.04.28  <span style={{color:RED, fontWeight:700}}>火</span>
+          </div>
+
+          {/* Clock */}
+          <div style={{
+            fontSize: tweaks.showSeconds ? 82 : 100,
+            fontWeight:700, letterSpacing:'-0.04em', lineHeight:1,
+            color: tweaks.redAccentTarget === 'clock' ? RED : '#fff',
+            position:'absolute', bottom:28, left:20
+          }}>
+            {time}
+          </div>
+
+          {/* Bottom stripe */}
+          <div style={{
+            position:'absolute', bottom:0, left:0, right:0, height:12,
+            background: RED
+          }}/>
+        </div>
+
+        {/* Sensor column */}
+        <div style={{flex:1, display:'flex', flexDirection:'column'}}>
+          {[
+            { icon:<IconTemp size={14} color="#fff"/>, val:`${SENSOR.temp}°C`, label:'気温', valColor: tweaks.redAccentTarget === 'sensors' ? RED : '#111' },
+            { icon:<IconHumid size={14} color="#fff"/>, val:`${SENSOR.humidity}%`, label:'湿度', valColor: tweaks.redAccentTarget === 'sensors' ? RED : '#111' },
+            { icon:<IconPressure size={14} color="#fff"/>, val:`${SENSOR.pressure} hPa`, label:'気圧', valColor: tweaks.redAccentTarget === 'sensors' ? RED : '#111' },
+          ].map((s,i) => (
+            <div key={i} style={{
+              flex:1, display:'flex', alignItems:'center',
+              padding:'0 16px', gap:10,
+              borderBottom: i<2 ? '1px solid #e0e0e0' : 'none',
+              background: i%2===0 ? '#fafafa' : '#fff'
+            }}>
+              <div style={{
+                width:26, height:26, borderRadius:'50%',
+                background:'#222', display:'flex', alignItems:'center', justifyContent:'center',
+                flexShrink:0
+              }}>{s.icon}</div>
+              <div>
+                <div style={{fontFamily:"'Noto Sans JP'", fontSize:12, fontWeight:600, color:'#666', marginBottom:2}}>{s.label}</div>
+                <div style={{fontSize:22, fontWeight:700, color:s.valColor, letterSpacing:'-0.02em'}}>{s.val}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Bottom: calendar strip + events */}
+      <div style={{
+        height:90, borderTop:'2px solid #111', display:'flex', alignItems:'stretch'
+      }}>
+        {/* Week cells */}
+        <div style={{display:'flex', flex:'0 0 340px', borderRight:'2px solid #111'}}>
+          {week.map((d,i) => {
+            const hasEv = EVENTS.some(e => e.d === d.d);
+            return (
+              <div key={i} style={{
+                flex:1, display:'flex', flexDirection:'column', alignItems:'center',
+                justifyContent:'center', gap:2,
+                background: d.isToday ? RED : 'transparent',
+                borderRight: i<6 ? '1px solid #2a2a2a' : 'none'
+              }}>
+                <div style={{fontSize:11, fontFamily:"'Noto Sans JP'", fontWeight:700,
+                  color: d.isToday ? 'rgba(255,255,255,0.85)' : d.isSun ? RED : d.isSat ? '#1565C0' : '#666'
+                }}>{d.label}</div>
+                <div style={{fontSize:19, fontWeight: d.isToday ? 700 : 600,
+                  color: d.isToday ? '#fff' : '#111', fontFamily:"'Space Mono'", lineHeight:1
+                }}>{d.d}</div>
+                <div style={{width:4, height:4, borderRadius:'50%',
+                  background: hasEv ? (d.isToday ? 'rgba(255,255,255,0.8)' : RED) : 'transparent'
+                }}/>
+              </div>
+            );
+          })}
+        </div>
+        {/* Event list */}
+        <div style={{flex:1, display:'flex', flexDirection:'column', justifyContent:'center',
+          padding:'6px 14px', gap:4
+        }}>
+          {EVENTS.map((ev,i) => (
+            <div key={i} style={{
+              display:'flex', alignItems:'center', gap:7,
+              borderLeft:`2.5px solid ${ev.isToday ? RED : '#555'}`,
+              paddingLeft:7
+            }}>
+              <span style={{fontFamily:"'Space Mono'", fontSize:12, fontWeight:700, color:'#999', flexShrink:0}}>
+                {ev.d < 30 ? `4/${ev.d}` : `5/${ev.d}`} {ev.time}
+              </span>
+              <span style={{fontFamily:"'Noto Sans JP'", fontSize:13, fontWeight:600,
+                color: ev.isToday ? RED : '#222',
+                overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis'
+              }}>{ev.title}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── LAYOUT C — "Typographic Grid" ────────────────────────────────────────
+// Clean grid: time fills center-left, sensor pills top-right, calendar bottom-right
+function LayoutC({ tweaks }) {
+  const week = getWeek();
+  const RED = '#D32F2F';
+  const [time, setTime] = React.useState(tweaks.demoTime || '14:32');
+  const [hours, mins] = time.split(':');
+
+  React.useEffect(() => {
+    const id = setInterval(() => {
+      const now = new Date();
+      const h = tweaks.use24h ? now.getHours() : (now.getHours()%12||12);
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      setTime(tweaks.showSeconds ? `${String(h).padStart(2,'0')}:${m}:${s}` : `${String(h).padStart(2,'0')}:${m}`);
+    }, 1000);
+    return () => clearInterval(id);
+  }, [tweaks.use24h, tweaks.showSeconds]);
+
+  const sensors = [
+    { icon:<IconTemp size={13}/>, val:`${SENSOR.temp}°C` },
+    { icon:<IconHumid size={13}/>, val:`${SENSOR.humidity}%` },
+    { icon:<IconPressure size={13}/>, val:`${SENSOR.pressure}hPa` },
+  ];
+
+  return (
+    <div style={{
+      width:792, height:272, background:'#fff',
+      fontFamily:"'Space Mono', monospace", overflow:'hidden',
+      border:'2px solid #111', display:'grid',
+      gridTemplateColumns:'420px 1fr',
+      gridTemplateRows:'1fr 80px',
+    }}>
+      {/* Top-Left: Clock */}
+      <div style={{
+        gridColumn:'1', gridRow:'1',
+        borderRight:'2px solid #111',
+        borderBottom:'2px solid #111',
+        display:'flex', flexDirection:'column',
+        justifyContent:'center', padding:'0 28px',
+        position:'relative'
+      }}>
+        {/* Year/month watermark */}
+        <div style={{
+          position:'absolute', top:12, right:16,
+          fontFamily:"'Noto Sans JP'", fontSize:13, color:'#ccc',
+          fontWeight:400, letterSpacing:'0.08em'
+        }}>2026 Apr</div>
+
+        <div style={{display:'flex', alignItems:'baseline', gap:0}}>
+          <span style={{
+            fontSize:118, fontWeight:700, lineHeight:0.9,
+            letterSpacing:'-0.06em',
+            color: tweaks.redAccentTarget === 'clock' ? RED : '#111'
+          }}>{hours}</span>
+          <span style={{
+            fontSize:118, fontWeight:700, lineHeight:0.9,
+            letterSpacing:'-0.06em', color:'#ddd', margin:'0 4px'
+          }}>:</span>
+          <span style={{
+            fontSize:118, fontWeight:700, lineHeight:0.9,
+            letterSpacing:'-0.06em', color:'#111'
+          }}>{mins}</span>
+        </div>
+
+        <div style={{
+          marginTop:6, display:'flex', alignItems:'center', gap:8
+        }}>
+          <span style={{
+            fontSize:13, fontFamily:"'Noto Sans JP'", fontWeight:500, color:'#666',
+            letterSpacing:'0.08em'
+          }}>2026年4月28日</span>
+          <span style={{
+            fontSize:13, fontFamily:"'Noto Sans JP'", fontWeight:700,
+            color:'#fff', background:RED, padding:'2px 8px'
+          }}>火</span>
+        </div>
+      </div>
+
+      {/* Top-Right: Sensors */}
+      <div style={{
+        gridColumn:'2', gridRow:'1',
+        borderBottom:'2px solid #111',
+        display:'flex', flexDirection:'column',
+        justifyContent:'center', padding:'14px 20px', gap:0
+      }}>
+        {[
+          { icon:<IconTemp size={16}/>, label:'気温', val:`${SENSOR.temp}`, unit:'°C' },
+          { icon:<IconHumid size={16}/>, label:'湿度', val:`${SENSOR.humidity}`, unit:'%' },
+          { icon:<IconPressure size={16}/>, label:'気圧', val:`${SENSOR.pressure}`, unit:'hPa' },
+        ].map((s,i) => (
+          <div key={i} style={{
+            display:'flex', alignItems:'center', gap:8,
+            padding:'7px 0',
+            borderBottom: i<2 ? '1px solid #efefef' : 'none'
+          }}>
+            <div style={{opacity:0.6, flexShrink:0}}>{s.icon}</div>
+            <span style={{
+              fontFamily:"'Noto Sans JP'", fontSize:12, fontWeight:600, color:'#666',
+              width:32, flexShrink:0
+            }}>{s.label}</span>
+            <span style={{
+              fontSize:24, fontWeight:700, letterSpacing:'-0.02em',
+              color: tweaks.redAccentTarget === 'sensors' ? RED : '#111',
+              lineHeight:1, flex:1
+            }}>{s.val}</span>
+            <span style={{
+              fontSize:12, fontWeight:600, color:'#888', fontFamily:"'Noto Sans JP'",
+              alignSelf:'flex-end', marginBottom:2
+            }}>{s.unit}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom-Left: Event list */}
+      <div style={{
+        gridColumn:'1', gridRow:'2',
+        borderRight:'2px solid #111',
+        display:'flex', alignItems:'center', padding:'0 20px 0 28px', gap:0
+      }}>
+        <div style={{flex:1, display:'flex', flexDirection:'column', gap:5}}>
+          {EVENTS.map((ev,i) => (
+            <div key={i} style={{
+              display:'flex', alignItems:'center', gap:8,
+              borderLeft:`3px solid ${ev.isToday ? RED : '#bbb'}`,
+              paddingLeft:8
+            }}>
+              <span style={{fontFamily:"'Space Mono'", fontSize:12, fontWeight:700, color: ev.isToday ? RED : '#777', flexShrink:0}}>
+                {ev.d < 30 ? `4/${ev.d}` : `5/${ev.d}`} {ev.time}
+              </span>
+              <span style={{fontFamily:"'Noto Sans JP'", fontSize:13, fontWeight:600,
+                color:'#111', overflow:'hidden', whiteSpace:'nowrap', textOverflow:'ellipsis'
+              }}>{ev.title}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{
+          fontFamily:"'Space Mono'", fontSize:11, fontWeight:700, color:'#bbb',
+          flexShrink:0, marginLeft:12
+        }}>14:30</div>
+      </div>
+
+      {/* Bottom-Right: Calendar */}
+      <div style={{
+        gridColumn:'2', gridRow:'2',
+        display:'flex', alignItems:'stretch'
+      }}>
+        {week.map((d,i) => (
+          <div key={i} style={{
+            flex:1, display:'flex', flexDirection:'column',
+            alignItems:'center', justifyContent:'center', gap:2,
+            background: d.isToday ? '#111' : 'transparent',
+            borderLeft: i>0 ? '1px solid #e0e0e0' : 'none',
+            position:'relative'
+          }}>
+            <div style={{
+              fontSize:11, fontFamily:"'Noto Sans JP'", fontWeight:700,
+              color: d.isToday ? 'rgba(255,255,255,0.8)' : d.isSun ? RED : d.isSat ? '#1565C0' : '#666'
+            }}>{d.label}</div>
+            <div style={{
+              fontSize:19, fontWeight: d.isToday ? 700 : 600,
+              color: d.isToday ? '#fff' : '#111',
+              fontFamily:"'Space Mono'", lineHeight:1
+            }}>{d.d}</div>
+            {d.hasEvent && (
+              <div style={{
+                position:'absolute', bottom:6,
+                width:4, height:4, borderRadius:'50%',
+                background: d.isToday ? RED : '#ccc'
+              }}/>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Main App ───────────────────────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="s1" title="レイアウト案">
+          <DCArtboard id="a1" label="A — Split (左:時計 / 右:センサー+カレンダー)" width={792} height={272}>
+            <LayoutA tweaks={tweaks}/>
+          </DCArtboard>
+          <DCArtboard id="a2" label="B — Clock Dominant (黒背景時計 + 底面カレンダー)" width={792} height={272}>
+            <LayoutB tweaks={tweaks}/>
+          </DCArtboard>
+          <DCArtboard id="a3" label="C — Typographic Grid (タイポグラフィ重視)" width={792} height={272}>
+            <LayoutC tweaks={tweaks}/>
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel>
+        <TweakSection title="時計">
+          <TweakToggle tweaks={tweaks} setTweak={setTweak} id="use24h" label="24時間表示" />
+          <TweakToggle tweaks={tweaks} setTweak={setTweak} id="showSeconds" label="秒を表示" />
+        </TweakSection>
+        <TweakSection title="赤アクセントの対象">
+          <TweakRadio tweaks={tweaks} setTweak={setTweak} id="redAccentTarget"
+            options={[
+              {value:'clock', label:'時計'},
+              {value:'sensors', label:'センサー'},
+              {value:'none', label:'なし'},
+            ]}
+          />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+<div id="root"></div>
+</body>
+</html>

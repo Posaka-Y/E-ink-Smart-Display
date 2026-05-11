@@ -38,11 +38,9 @@ typedef struct {
 } cFONT;
 
 // Standard Waveshare ASCII fonts
-extern sFONT Font24;
 extern sFONT Font20;
 extern sFONT Font16;
 extern sFONT Font12;
-extern sFONT Font8;
 
 // Custom 64px clock font (chars: ' 0123456789:.-')
 extern sFONT Font64;

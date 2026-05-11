@@ -1,6 +1,6 @@
 /*****************************************************************************
 * | File      	:   DEV_Config.h
-* | Author      :   Waveshare team (modified for ESP32-C3 Supermini)
+* | Author      :   Waveshare team (modified for ESP32)
 * | Function    :   Hardware underlying interface
 ******************************************************************************/
 #ifndef _DEV_CONFIG_H_

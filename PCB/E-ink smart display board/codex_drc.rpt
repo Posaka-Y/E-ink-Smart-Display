@@ -1,0 +1,89 @@
+** Drc report for E-ink smart display board.kicad_pcb **
+** Created on 2026-05-03T18:19:26 **
+** Report includes: Errors, Warnings **
+
+** Found 1 DRC violations **
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7874 mm)
+    Rule: board setup constraints silk text height; warning
+    @(107.2850 mm, 164.0000 mm): Reference field of U2
+
+** Found 17 unconnected pads **
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(125.0000 mm, 157.5500 mm): PTH pad 2 [GND] of J2
+    @(106.0150 mm, 165.2700 mm): PTH pad GND [GND] of U2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(125.0000 mm, 157.5500 mm): PTH pad 2 [GND] of J2
+    @(132.7000 mm, 113.0250 mm): PTH pad 29 [GND] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(131.5000 mm, 166.0000 mm): PTH pad 3 [GND] of J1
+    @(125.0000 mm, 157.5500 mm): PTH pad 2 [GND] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(132.7000 mm, 113.0250 mm): PTH pad 29 [GND] of U1
+    @(107.3000 mm, 113.0250 mm): PTH pad 2 [GND] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(106.0150 mm, 167.8100 mm): PTH pad SCL [I2C_SCL] of U2
+    @(107.3000 mm, 143.5050 mm): PTH pad 14 [I2C_SCL] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(106.0150 mm, 162.7300 mm): PTH pad SDA [I2C_SDA] of U2
+    @(107.3000 mm, 135.8850 mm): PTH pad 11 [I2C_SDA] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(107.3000 mm, 110.4850 mm): PTH pad 1 [3V3] of U1
+    @(106.0150 mm, 160.1900 mm): PTH pad VDD [3V3] of U2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(123.5000 mm, 157.5500 mm): PTH pad 1 [3V3] of J2
+    @(106.0150 mm, 160.1900 mm): PTH pad VDD [3V3] of U2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(126.5000 mm, 166.0000 mm): PTH pad 1 [3V3] of J1
+    @(123.5000 mm, 157.5500 mm): PTH pad 1 [3V3] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(107.3000 mm, 146.0450 mm): PTH pad 15 [EPD_DIN] of U1
+    @(126.5000 mm, 157.5500 mm): PTH pad 3 [EPD_DIN] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(107.3000 mm, 130.8050 mm): PTH pad 9 [EPD_CLK] of U1
+    @(128.0000 mm, 157.5500 mm): PTH pad 4 [EPD_CLK] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(129.5000 mm, 157.5500 mm): PTH pad 5 [EPD_CS] of J2
+    @(132.7000 mm, 123.1850 mm): PTH pad 25 [EPD_CS] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(131.0000 mm, 157.5500 mm): PTH pad 6 [EPD_DC] of J2
+    @(132.7000 mm, 125.7250 mm): PTH pad 24 [EPD_DC] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(132.5000 mm, 157.5500 mm): PTH pad 7 [EPD_RST] of J2
+    @(132.7000 mm, 128.2650 mm): PTH pad 23 [EPD_RST] of U1
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(132.7000 mm, 130.8050 mm): PTH pad 22 [EPD_BUSY] of U1
+    @(134.0000 mm, 157.5500 mm): PTH pad 8 [EPD_BUSY] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(132.7000 mm, 133.3450 mm): PTH pad 21 [EPD_PWR] of U1
+    @(135.5000 mm, 157.5500 mm): PTH pad 9 [EPD_PWR] of J2
+[unconnected_items]: Missing connection between items
+    Local override; error
+    @(129.0000 mm, 166.0000 mm): PTH pad 2 [PIR_OUT] of J1
+    @(132.7000 mm, 138.4250 mm): PTH pad 19 [PIR_OUT] of U1
+
+** Found 0 Footprint errors **
+
+** Ignored checks **
+    - Footprint has no courtyard defined
+    - Track endpoint not centered on via
+    - Tuning profile track geometries
+    - Footprint doesn't match symbol's footprint filters
+    - Footprint component type doesn't match footprint pads
+
+** End of Report **

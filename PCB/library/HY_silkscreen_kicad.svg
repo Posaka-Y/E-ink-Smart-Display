@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="10mm" height="5.63mm" viewBox="0 0 254 143" version="1.1">
+  <title>HY silkscreen logo for KiCad</title>
+  <desc>Single-color filled vector optimized for PCB silkscreen. Import into KiCad on F.SilkS or B.SilkS. Recommended height: 5 mm or larger.</desc>
+  <g id="HY-logo" fill="#ffffff" stroke="none" fill-rule="nonzero">
+    <path id="H" d="M0,0 L0,142 L33,141 L34,83 L88,83 L90,100 L89,141 L120,142 L121,15 L112,1 L89,1 L89,56 L87,58 L35,58 L33,56 L33,0 Z"/>
+    <path id="Y" d="M119,0 L171,81 L171,142 L202,142 L203,81 L253,0 L219,0 L188,51 L156,0 Z"/>
+  </g>
+</svg>

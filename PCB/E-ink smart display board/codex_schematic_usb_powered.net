@@ -1,0 +1,1569 @@
+(export
+	(version "E")
+	(design
+		(source "C:\\Users\\posak\\Desktop\\趣味\\E-ink-Smart-Display\\PCB\\E-ink smart display board\\E-ink smart display board.kicad_sch")
+		(date "2026-05-03T22:18:10")
+		(tool "Eeschema 10.0.1")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title "E-ink Smart Display")
+				(company)
+				(rev)
+				(date "2026-05-03")
+				(source "E-ink smart display board.kicad_sch")
+				(comment
+					(number "1")
+					(value "")
+				)
+				(comment
+					(number "2")
+					(value "")
+				)
+				(comment
+					(number "3")
+					(value "")
+				)
+				(comment
+					(number "4")
+					(value "")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components
+		(comp
+			(ref "C1")
+			(value "47uF")
+			(footprint "Capacitor_SMD:C_0805_2012Metric")
+			(description "Unpolarized capacitor")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Unpolarized capacitor")
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "364eda57-9082-483a-aea5-24874ea006e5")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C2")
+			(value "0.1uF")
+			(footprint "Capacitor_SMD:C_0805_2012Metric")
+			(description "Unpolarized capacitor")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Unpolarized capacitor")
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "649a869f-4bb5-42c1-ba53-c9b24100144c")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C3")
+			(value "10uF")
+			(footprint "Capacitor_SMD:C_0805_2012Metric")
+			(description "Unpolarized capacitor")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Unpolarized capacitor")
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "a82c370f-7d3d-4bab-b057-237598d012e7")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "C4")
+			(value "0.1uF")
+			(footprint "Capacitor_SMD:C_0805_2012Metric")
+			(description "Unpolarized capacitor")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_SMD:C_0805_2012Metric")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Unpolarized capacitor")
+			)
+			(libsource
+				(lib "Device")
+				(part "C")
+				(description "Unpolarized capacitor")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "cap capacitor")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "C_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "424efdae-3008-4b23-b36e-df31f415d1de")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J1")
+			(value "Conn_01x09")
+			(footprint "Connector_PinHeader_2.54mm:PinHeader_1x09_P2.54mm_Vertical")
+			(description "Generic connector, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			(fields
+				(field
+					(name "Footprint") "Connector_PinHeader_2.54mm:PinHeader_1x09_P2.54mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Generic connector, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(libsource
+				(lib "Connector_Generic")
+				(part "Conn_01x09")
+				(description "Generic connector, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "connector")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "Connector*:*_1x??_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "2a8801da-5aad-4aaf-8adf-09c6a4862788")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "9")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "J2")
+			(value "Conn_01x03")
+			(footprint "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical")
+			(description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			(fields
+				(field
+					(name "Footprint") "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(libsource
+				(lib "Connector_Generic")
+				(part "Conn_01x03")
+				(description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(property
+				(name "ki_keywords")
+				(value "connector")
+			)
+			(property
+				(name "ki_fp_filters")
+				(value "Connector*:*_1x??_*")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "aab3acb7-82e6-4815-a303-f33982501c91")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U1")
+			(value "ESP32-DEVKIT-V1")
+			(footprint "ESP32-DEVKIT-V1 (1):MODULE_ESP32_DEVKIT_V1")
+			(description "Dual core, Wi-Fi: 2.4 GHz up to 150 Mbits/s,BLE (Bluetooth Low Energy) and legacy Bluetooth, 32 bits, Up to 240 MHz")
+			(fields
+				(field
+					(name "MF") "Do it")
+				(field
+					(name "MAXIMUM_PACKAGE_HEIGHT") "6.8 mm")
+				(field
+					(name "Package") "None")
+				(field
+					(name "Price") "None")
+				(field
+					(name "Check_prices") "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=eda")
+				(field
+					(name "STANDARD") "Manufacturer Recommendations")
+				(field
+					(name "PARTREV") "N/A")
+				(field
+					(name "SnapEDA_Link") "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=snap")
+				(field
+					(name "MP") "ESP32-DEVKIT-V1")
+				(field
+					(name "Availability") "Not in stock")
+				(field
+					(name "MANUFACTURER") "DOIT")
+				(field
+					(name "Footprint") "ESP32-DEVKIT-V1 (1):MODULE_ESP32_DEVKIT_V1")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Dual core, Wi-Fi: 2.4 GHz up to 150 Mbits/s,BLE (Bluetooth Low Energy) and legacy Bluetooth, 32 bits, Up to 240 MHz")
+			)
+			(libsource
+				(lib "ESP32-DEVKIT-V1")
+				(part "ESP32-DEVKIT-V1")
+				(description "Dual core, Wi-Fi: 2.4 GHz up to 150 Mbits/s,BLE (Bluetooth Low Energy) and legacy Bluetooth, 32 bits, Up to 240 MHz")
+			)
+			(property
+				(name "MF")
+				(value "Do it")
+			)
+			(property
+				(name "MAXIMUM_PACKAGE_HEIGHT")
+				(value "6.8 mm")
+			)
+			(property
+				(name "Package")
+				(value "None")
+			)
+			(property
+				(name "Price")
+				(value "None")
+			)
+			(property
+				(name "Check_prices")
+				(value "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=eda")
+			)
+			(property
+				(name "STANDARD")
+				(value "Manufacturer Recommendations")
+			)
+			(property
+				(name "PARTREV")
+				(value "N/A")
+			)
+			(property
+				(name "SnapEDA_Link")
+				(value "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=snap")
+			)
+			(property
+				(name "MP")
+				(value "ESP32-DEVKIT-V1")
+			)
+			(property
+				(name "Availability")
+				(value "Not in stock")
+			)
+			(property
+				(name "MANUFACTURER")
+				(value "DOIT")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "0a14341b-0d31-4e63-ad54-02be10681660")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "30")
+						)
+						(pin
+							(num "16")
+						)
+						(pin
+							(num "17")
+						)
+						(pin
+							(num "18")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "5")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "27")
+						)
+						(pin
+							(num "28")
+						)
+						(pin
+							(num "26")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "9")
+						)
+						(pin
+							(num "10")
+						)
+						(pin
+							(num "11")
+						)
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "12")
+						)
+						(pin
+							(num "13")
+						)
+						(pin
+							(num "6")
+						)
+						(pin
+							(num "7")
+						)
+						(pin
+							(num "14")
+						)
+						(pin
+							(num "15")
+						)
+						(pin
+							(num "23")
+						)
+						(pin
+							(num "24")
+						)
+						(pin
+							(num "25")
+						)
+						(pin
+							(num "21")
+						)
+						(pin
+							(num "22")
+						)
+						(pin
+							(num "20")
+						)
+						(pin
+							(num "19")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "29")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U2")
+			(value "AHT20_BMP280")
+			(footprint "AHT20_BMP280 (1):AHT20_BMP280")
+			(description "High Precision Digital Temperature And Humidity Atmospheric Pressure Sensor")
+			(fields
+				(field
+					(name "MF") "Estardyn")
+				(field
+					(name "Package") "None")
+				(field
+					(name "Price") "None")
+				(field
+					(name "SnapEDA_Link") "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=snap")
+				(field
+					(name "MP") "AHT20+BMP280")
+				(field
+					(name "Availability") "Not in stock")
+				(field
+					(name "Check_prices") "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=eda")
+				(field
+					(name "Footprint") "AHT20_BMP280 (1):AHT20_BMP280")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "High Precision Digital Temperature And Humidity Atmospheric Pressure Sensor")
+			)
+			(libsource
+				(lib "AHT20_BMP280")
+				(part "AHT20_BMP280")
+				(description "High Precision Digital Temperature And Humidity Atmospheric Pressure Sensor")
+			)
+			(property
+				(name "MF")
+				(value "Estardyn")
+			)
+			(property
+				(name "Package")
+				(value "None")
+			)
+			(property
+				(name "Price")
+				(value "None")
+			)
+			(property
+				(name "SnapEDA_Link")
+				(value "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=snap")
+			)
+			(property
+				(name "MP")
+				(value "AHT20+BMP280")
+			)
+			(property
+				(name "Availability")
+				(value "Not in stock")
+			)
+			(property
+				(name "Check_prices")
+				(value "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=eda")
+			)
+			(property
+				(name "Sheetname")
+				(value "")
+			)
+			(property
+				(name "Sheetfile")
+				(value "E-ink smart display board.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "8eae6516-a169-490a-8273-e55303f34a6a")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "SDA")
+						)
+						(pin
+							(num "SCL")
+						)
+						(pin
+							(num "VDD")
+						)
+						(pin
+							(num "GND")
+						)
+					)
+				)
+			)
+		)
+	)
+	(groups)
+	(variants)
+	(libparts
+		(libpart
+			(lib "AHT20_BMP280")
+			(part "AHT20_BMP280")
+			(description "High Precision Digital Temperature And Humidity Atmospheric Pressure Sensor")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "AHT20_BMP280")
+				(field
+					(name "Footprint") "AHT20_BMP280:AHT20_BMP280")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "High Precision Digital Temperature And Humidity Atmospheric Pressure Sensor")
+				(field
+					(name "MF") "Estardyn")
+				(field
+					(name "Package") "None")
+				(field
+					(name "Price") "None")
+				(field
+					(name "SnapEDA_Link") "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=snap")
+				(field
+					(name "MP") "AHT20+BMP280")
+				(field
+					(name "Availability") "Not in stock")
+				(field
+					(name "Check_prices") "https://www.snapeda.com/parts/AHT20+BMP280/Estardyn/view-part/?ref=eda")
+			)
+			(pins
+				(pin
+					(num "GND")
+					(name "GND")
+					(type "bidirectional")
+				)
+				(pin
+					(num "SCL")
+					(name "SCL")
+					(type "bidirectional")
+				)
+				(pin
+					(num "SDA")
+					(name "SDA")
+					(type "bidirectional")
+				)
+				(pin
+					(num "VDD")
+					(name "VDD")
+					(type "bidirectional")
+				)
+			)
+		)
+		(libpart
+			(lib "Connector_Generic")
+			(part "Conn_01x03")
+			(description "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			(footprints
+				(fp "Connector*:*_1x??_*")
+			)
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "Conn_01x03")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Generic connector, single row, 01x03, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "Pin_1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "Pin_2")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "Pin_3")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Connector_Generic")
+			(part "Conn_01x09")
+			(description "Generic connector, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			(footprints
+				(fp "Connector*:*_1x??_*")
+			)
+			(fields
+				(field
+					(name "Reference") "J")
+				(field
+					(name "Value") "Conn_01x09")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Generic connector, single row, 01x09, script generated (kicad-library-utils/schlib/autogen/connector/)")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "Pin_1")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "Pin_2")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "Pin_3")
+					(type "passive")
+				)
+				(pin
+					(num "4")
+					(name "Pin_4")
+					(type "passive")
+				)
+				(pin
+					(num "5")
+					(name "Pin_5")
+					(type "passive")
+				)
+				(pin
+					(num "6")
+					(name "Pin_6")
+					(type "passive")
+				)
+				(pin
+					(num "7")
+					(name "Pin_7")
+					(type "passive")
+				)
+				(pin
+					(num "8")
+					(name "Pin_8")
+					(type "passive")
+				)
+				(pin
+					(num "9")
+					(name "Pin_9")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "Device")
+			(part "C")
+			(description "Unpolarized capacitor")
+			(footprints
+				(fp "C_*")
+			)
+			(fields
+				(field
+					(name "Reference") "C")
+				(field
+					(name "Value") "C")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Unpolarized capacitor")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "ESP32-DEVKIT-V1")
+			(part "ESP32-DEVKIT-V1")
+			(description "Dual core, Wi-Fi: 2.4 GHz up to 150 Mbits/s,BLE (Bluetooth Low Energy) and legacy Bluetooth, 32 bits, Up to 240 MHz")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "ESP32-DEVKIT-V1")
+				(field
+					(name "Footprint") "ESP32-DEVKIT-V1:MODULE_ESP32_DEVKIT_V1")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Dual core, Wi-Fi: 2.4 GHz up to 150 Mbits/s,BLE (Bluetooth Low Energy) and legacy Bluetooth, 32 bits, Up to 240 MHz")
+				(field
+					(name "MF") "Do it")
+				(field
+					(name "MAXIMUM_PACKAGE_HEIGHT") "6.8 mm")
+				(field
+					(name "Package") "None")
+				(field
+					(name "Price") "None")
+				(field
+					(name "Check_prices") "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=eda")
+				(field
+					(name "STANDARD") "Manufacturer Recommendations")
+				(field
+					(name "PARTREV") "N/A")
+				(field
+					(name "SnapEDA_Link") "https://www.snapeda.com/parts/ESP32-DEVKIT-V1/Do+it/view-part/?ref=snap")
+				(field
+					(name "MP") "ESP32-DEVKIT-V1")
+				(field
+					(name "Availability") "Not in stock")
+				(field
+					(name "MANUFACTURER") "DOIT")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "3V3")
+					(type "output")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "3")
+					(name "D15")
+					(type "bidirectional")
+				)
+				(pin
+					(num "4")
+					(name "D2")
+					(type "bidirectional")
+				)
+				(pin
+					(num "5")
+					(name "D4")
+					(type "bidirectional")
+				)
+				(pin
+					(num "6")
+					(name "RX2")
+					(type "input")
+				)
+				(pin
+					(num "7")
+					(name "TX2")
+					(type "output")
+				)
+				(pin
+					(num "8")
+					(name "D5")
+					(type "bidirectional")
+				)
+				(pin
+					(num "9")
+					(name "D18")
+					(type "bidirectional")
+				)
+				(pin
+					(num "10")
+					(name "D19")
+					(type "bidirectional")
+				)
+				(pin
+					(num "11")
+					(name "D21")
+					(type "bidirectional")
+				)
+				(pin
+					(num "12")
+					(name "RX0")
+					(type "input")
+				)
+				(pin
+					(num "13")
+					(name "TX0")
+					(type "output")
+				)
+				(pin
+					(num "14")
+					(name "D22")
+					(type "bidirectional")
+				)
+				(pin
+					(num "15")
+					(name "D23")
+					(type "bidirectional")
+				)
+				(pin
+					(num "16")
+					(name "EN")
+					(type "input")
+				)
+				(pin
+					(num "17")
+					(name "VP")
+					(type "bidirectional")
+				)
+				(pin
+					(num "18")
+					(name "VN")
+					(type "bidirectional")
+				)
+				(pin
+					(num "19")
+					(name "D34")
+					(type "bidirectional")
+				)
+				(pin
+					(num "20")
+					(name "D35")
+					(type "bidirectional")
+				)
+				(pin
+					(num "21")
+					(name "D32")
+					(type "bidirectional")
+				)
+				(pin
+					(num "22")
+					(name "D33")
+					(type "bidirectional")
+				)
+				(pin
+					(num "23")
+					(name "D25")
+					(type "bidirectional")
+				)
+				(pin
+					(num "24")
+					(name "D26")
+					(type "bidirectional")
+				)
+				(pin
+					(num "25")
+					(name "D27")
+					(type "bidirectional")
+				)
+				(pin
+					(num "26")
+					(name "D14")
+					(type "bidirectional")
+				)
+				(pin
+					(num "27")
+					(name "D12")
+					(type "bidirectional")
+				)
+				(pin
+					(num "28")
+					(name "D13")
+					(type "bidirectional")
+				)
+				(pin
+					(num "29")
+					(name "GND")
+					(type "passive")
+				)
+				(pin
+					(num "30")
+					(name "VIN")
+					(type "input")
+				)
+			)
+		)
+	)
+	(libraries
+		(library
+			(logical "AHT20_BMP280")
+			(uri "C:/Users/posak/Desktop/趣味/E-ink-Smart-Display/PCB/library/AHT20_BMP280 (1)/AHT20_BMP280.kicad_sym")
+		)
+		(library
+			(logical "Connector_Generic")
+			(uri "${KICAD10_SYMBOL_DIR}/Connector_Generic.kicad_sym")
+		)
+		(library
+			(logical "Device")
+			(uri "${KICAD10_SYMBOL_DIR}/Device.kicad_sym")
+		)
+		(library
+			(logical "ESP32-DEVKIT-V1")
+			(uri "C:/Users/posak/Desktop/趣味/E-ink-Smart-Display/PCB/library/ESP32-DEVKIT-V1 (1)/ESP32-DEVKIT-V1.kicad_sym")
+		)
+	)
+	(nets
+		(net
+			(code "1")
+			(name "/3.3V")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C2")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C3")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "1")
+				(pinfunction "Pin_1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "1")
+				(pinfunction "Pin_1_1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "1")
+				(pinfunction "3V3_1")
+				(pintype "output")
+			)
+			(node
+				(ref "U2")
+				(pin "VDD")
+				(pinfunction "VDD_VDD")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "2")
+			(name "/EPD_BUSY")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "8")
+				(pinfunction "Pin_8_8")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "22")
+				(pinfunction "D33_22")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "3")
+			(name "/EPD_CLK")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "4")
+				(pinfunction "Pin_4_4")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "9")
+				(pinfunction "D18_9")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "4")
+			(name "/EPD_CS")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "5")
+				(pinfunction "Pin_5_5")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "25")
+				(pinfunction "D27_25")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "5")
+			(name "/EPD_DC")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "6")
+				(pinfunction "Pin_6_6")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "24")
+				(pinfunction "D26_24")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "6")
+			(name "/EPD_DIN")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "3")
+				(pinfunction "Pin_3_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "15")
+				(pinfunction "D23_15")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "7")
+			(name "/EPD_PWR")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "9")
+				(pinfunction "Pin_9_9")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "21")
+				(pinfunction "D32_21")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "8")
+			(name "/EPD_RST")
+			(class "Default")
+			(node
+				(ref "J1")
+				(pin "7")
+				(pinfunction "Pin_7_7")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "23")
+				(pinfunction "D25_23")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "9")
+			(name "/GND")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C2")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C3")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "C4")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J1")
+				(pin "2")
+				(pinfunction "Pin_2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "J2")
+				(pin "3")
+				(pinfunction "Pin_3_3")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "29")
+				(pinfunction "GND_29")
+				(pintype "passive")
+			)
+			(node
+				(ref "U2")
+				(pin "GND")
+				(pinfunction "GND_GND")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "10")
+			(name "/I2C_SCL")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "14")
+				(pinfunction "D22_14")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "SCL")
+				(pinfunction "SCL_SCL")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "11")
+			(name "/I2C_SDA")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "11")
+				(pinfunction "D21_11")
+				(pintype "bidirectional")
+			)
+			(node
+				(ref "U2")
+				(pin "SDA")
+				(pinfunction "SDA_SDA")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "12")
+			(name "/PIR_OUT")
+			(class "Default")
+			(node
+				(ref "J2")
+				(pin "2")
+				(pinfunction "Pin_2_2")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "19")
+				(pinfunction "D34_19")
+				(pintype "bidirectional")
+			)
+		)
+		(net
+			(code "13")
+			(name "unconnected-(U1-D2-Pad4)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "4")
+				(pinfunction "D2_4")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "14")
+			(name "unconnected-(U1-D4-Pad5)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "5")
+				(pinfunction "D4_5")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "15")
+			(name "unconnected-(U1-D5-Pad8)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "8")
+				(pinfunction "D5_8")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "16")
+			(name "unconnected-(U1-D12-Pad27)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "27")
+				(pinfunction "D12_27")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "17")
+			(name "unconnected-(U1-D13-Pad28)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "28")
+				(pinfunction "D13_28")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "18")
+			(name "unconnected-(U1-D14-Pad26)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "26")
+				(pinfunction "D14_26")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "19")
+			(name "unconnected-(U1-D15-Pad3)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "3")
+				(pinfunction "D15_3")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "20")
+			(name "unconnected-(U1-D19-Pad10)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "10")
+				(pinfunction "D19_10")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "21")
+			(name "unconnected-(U1-D35-Pad20)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "20")
+				(pinfunction "D35_20")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "22")
+			(name "unconnected-(U1-EN-Pad16)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "16")
+				(pinfunction "EN_16")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "23")
+			(name "unconnected-(U1-RX0-Pad12)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "12")
+				(pinfunction "RX0_12")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "24")
+			(name "unconnected-(U1-RX2-Pad6)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "6")
+				(pinfunction "RX2_6")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "25")
+			(name "unconnected-(U1-TX0-Pad13)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "13")
+				(pinfunction "TX0_13")
+				(pintype "output+no_connect")
+			)
+		)
+		(net
+			(code "26")
+			(name "unconnected-(U1-TX2-Pad7)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "7")
+				(pinfunction "TX2_7")
+				(pintype "output+no_connect")
+			)
+		)
+		(net
+			(code "27")
+			(name "unconnected-(U1-VIN-Pad30)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "30")
+				(pinfunction "VIN_30")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "28")
+			(name "unconnected-(U1-VN-Pad18)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "18")
+				(pinfunction "VN_18")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "29")
+			(name "unconnected-(U1-VP-Pad17)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "17")
+				(pinfunction "VP_17")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+	)
+)
